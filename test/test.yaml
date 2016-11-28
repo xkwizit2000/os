@@ -1,0 +1,51 @@
+_info:
+    title: Test suite for the OS module.
+    desc: |
+        These tests uses the "testrunner" module to run the tests.
+        If the tests are run directly as-is outside a wrapper,
+        they might wreak havoc on your system.
+        TestRunner module wraps the tests properly.
+_env:
+    - CMD: ${_SPACEBIN} -m testrunner /run/ -- -- @{DIR}/test.yaml
+
+_platforms:
+    - type: docker
+      subtype: debian
+    - type: docker
+      subtype: ubuntu
+    - type: docker
+      subtype: alpine
+
+_tests:
+    -
+        -
+            @include: @{DIR}/../Spacefile.yaml|/_install
+        -
+            _env:
+                - targetuser: astro
+                - targetuserpubkeyfile: @{DIR}/key.pub
+            @include: @{DIR}/../Spacefile.yaml|/createuser
+            _info:
+                title: Create a user.
+        -
+            _env:
+                - targetuser: astro
+            @include: @{DIR}/../Spacefile.yaml|/userexist
+            _info:
+                title: check so that our user exist.
+        -
+            @include: @{DIR}/../Spacefile.yaml|/update
+        -
+            @include: @{DIR}/../Spacefile.yaml|/installsudo
+        -
+            _env:
+                - targetuser: astro
+            @include: @{DIR}/../Spacefile.yaml|/mksudo
+            _info:
+                title: Make user into sudo.
+_clean:
+    _info:
+        title: Do nothing.
+    _env:
+        - CMDWRAP: !unset
+        - CMD: ":"
