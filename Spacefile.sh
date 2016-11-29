@@ -75,7 +75,7 @@ OS_ID ()
         elif command -v "brew" >/dev/null; then
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
-            _OSHOME="/User"
+            _OSHOME="/Users"
             _OSPKGMGR="brew"
         fi
     fi
