@@ -45,8 +45,24 @@ OS_ID ()
     [ -d "/etc/yum" ] && _OSPKGMGR="yum"
     [ -f "/etc/redhat-release" ] && _OSPKGMGR="yum"
     [ -f "/etc/alpine-release" ] && _OSPKGMGR="apk"
-    # TODO:
-    [ -f "/etc/mac-attack" ] &&  { _OSTYPE="darwin"; _OSHOME="/User"; _OSPKGMGR="brew"; }
+
+    # Some releases are more tricky.
+    if [ "${_OSPKGMGR}" = "" ]; then
+        if command -v "apt" >/dev/null; then
+            _OSPKGMGR="apt"
+        elif command -v "pacman" >/dev/null; then
+            _OSPKGMGR="pacman"
+        elif command -v "yum" >/dev/null; then
+            _OSPKGMGR="yum"
+        elif command -v "apk" >/dev/null; then
+            _OSPKGMGR="apk"
+        elif command -v "brew" >/dev/null; then
+            _OSPKGMGR="brew"
+            _OSTYPE="darwin"
+            _OSHOME="/User"
+            _OSPKGMGR="brew"
+        fi
+    fi
 
     return 0
 }
@@ -89,14 +105,14 @@ OS_IS_INSTALLED ()
 
     PRINT "Check if ${program} is installed." "debug"
     if command -v "${program}" >/dev/null; then
-        PRINT "Yes, ${program} is installed." "debug"
+        PRINT "Available: ${program} is installed." "debug"
         return 0
     else
         if [ "${pkg}" = "" ]; then
-            PRINT "No, ${program} is not installed." "error"
+            PRINT "Missing: ${program} is not installed." "error"
             return 1
         fi
-        PRINT "No, ${program} is not installed. Attempting installation..." "info"
+        PRINT "Missing: ${program} is not installed. Attempting installation..." "info"
         OS_INSTALL_PKG "${pkg}"
         return $?
     fi
