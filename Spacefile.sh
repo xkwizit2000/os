@@ -176,6 +176,7 @@ OS_INSTALL_PKG ()
 {
     SPACE_SIGNATURE="pkg"
     SPACE_CMDDEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
+    SPACE_CMDENV="SUDO=\${SUDO-}"
 
     local pkg="${1}"
     shift
@@ -186,8 +187,11 @@ OS_INSTALL_PKG ()
     OS_ID
     _OS_PKG_TRANSLATE
 
-    local SUDO=
-    [ "$(id -u)" -gt 0 ] && SUDO="sudo"
+    if [ "$(id -u)" -gt 0 ]; then
+        local SUDO="${SUDO-}"
+    else
+        local SUDO=
+    fi
 
     PRINT "Install package: ${pkg}." "info"
 
@@ -242,12 +246,16 @@ OS_INSTALL_PKG ()
 OS_UPDATE ()
 {
     SPACE_CMDDEP="OS_ID PRINT"
+    SPACE_CMDENV="SUDO=\${SUDO-}"
 
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
 
-    local SUDO=
-    [ "$(id -u)" -gt 0 ] && SUDO="sudo"
+    if [ "$(id -u)" -gt 0 ]; then
+        local SUDO="${SUDO-}"
+    else
+        local SUDO=
+    fi
 
     PRINT "Update package lists." "info"
 
@@ -284,6 +292,7 @@ OS_UPDATE ()
 OS_UPGRADE ()
 {
     SPACE_CMDDEP="OS_ID OS_UPDATE PRINT"
+    SPACE_CMDENV="SUDO=\${SUDO-}"
 
     OS_UPDATE
     if [ "$?" -gt 0 ]; then
@@ -293,8 +302,11 @@ OS_UPGRADE ()
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
 
-    local SUDO=
-    [ "$(id -u)" -gt 0 ] && SUDO="sudo"
+    if [ "$(id -u)" -gt 0 ]; then
+        local SUDO="${SUDO-}"
+    else
+        local SUDO=
+    fi
 
     PRINT "Upgrade OS..." "info"
 
