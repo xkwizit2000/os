@@ -76,7 +76,6 @@ OS_ID ()
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
             _OSHOME="/Users"
-            _OSPKGMGR="brew"
         fi
     fi
 
