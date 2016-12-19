@@ -64,7 +64,7 @@ OS_ID ()
 
     # Some releases are more tricky.
     if [ "${_OSPKGMGR}" = "" ]; then
-        if command -v "apt" >/dev/null; then
+        if command -v "apt-get" >/dev/null; then
             _OSPKGMGR="apt"
         elif command -v "pacman" >/dev/null; then
             _OSPKGMGR="pacman"
