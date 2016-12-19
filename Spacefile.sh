@@ -76,6 +76,7 @@ OS_ID ()
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
             _OSHOME="/Users"
+            _OSINIT="launchd"
         fi
     fi
 
@@ -352,6 +353,8 @@ OS_SERVICE ()
         ${SUDO} systemctl "${action}" "${service}"
     elif [ "${_OSINIT}" = "sysvinit" ]; then
         ${SUDO} "/etc/init.d/${service}" "${action}"
+    elif [ "${_OSINIT}" = "launchd" ]; then
+        ${SUDO} launchctl "${action}" "${service}"
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
         return 1
@@ -380,7 +383,8 @@ OS_REBOOT ()
     local SUDO="${SUDO-}"
     if [ "${_OSINIT}" = "systemd" ]; then
         ${SUDO} systemctl reboot
-    elif [ "${_OSINIT}" = "sysvinit" ]; then
+    elif [ "${_OSINIT}" = "sysvinit" ] \
+      || [ "${_OSINIT}" = "launchd" ]; then
         ${SUDO} reboot now
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
