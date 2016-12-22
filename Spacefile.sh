@@ -64,7 +64,7 @@ OS_ID ()
 
     # Some releases are more tricky.
     if [ "${_OSPKGMGR}" = "" ]; then
-        if command -v "apt" >/dev/null; then
+        if command -v "apt-get" >/dev/null; then
             _OSPKGMGR="apt"
         elif command -v "pacman" >/dev/null; then
             _OSPKGMGR="pacman"
@@ -76,7 +76,11 @@ OS_ID ()
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
             _OSHOME="/Users"
-            _OSPKGMGR="brew"
+            _OSINIT="launchd"
+        elif command -v "pkg" >/dev/null; then
+            _OSPKGMGR="pkg"
+            _OSTYPE="FreeBSD"
+            _OSINIT="rc"
         fi
     fi
 
@@ -221,6 +225,12 @@ OS_INSTALL_PKG ()
             OS_UPDATE
             ${SUDO} brew install "${pkg}"
         fi
+    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+        ${SUDO} pkg install "${pkg}"
+        if [ "$?" -gt 0 ]; then
+            OS_UPDATE
+            ${SUDO} pkg install "${pkg}"
+        fi
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
         return 1
@@ -269,6 +279,8 @@ OS_UPDATE ()
         ${SUDO} apk update
     elif [ "${_OSPKGMGR}" = "brew" ]; then
         ${SUDO} brew update
+    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+        ${SUDO} pkg update
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
         return 1
@@ -320,6 +332,8 @@ OS_UPGRADE ()
         ${SUDO} apk upgrade
     elif [ "${_OSPKGMGR}" = "brew" ]; then
         ${SUDO} brew upgrade
+    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+        ${SUDO} pkg upgrade
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
         return 1
@@ -353,6 +367,10 @@ OS_SERVICE ()
         ${SUDO} systemctl "${action}" "${service}"
     elif [ "${_OSINIT}" = "sysvinit" ]; then
         ${SUDO} "/etc/init.d/${service}" "${action}"
+    elif [ "${_OSINIT}" = "launchd" ]; then
+        ${SUDO} launchctl "${action}" "${service}"
+    elif [ "${_OSINIT}" = "rc" ]; then
+        ${SUDO} "/etc/rc.d/${service}" "${action}"
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
         return 1
@@ -381,7 +399,9 @@ OS_REBOOT ()
     local SUDO="${SUDO-}"
     if [ "${_OSINIT}" = "systemd" ]; then
         ${SUDO} systemctl reboot
-    elif [ "${_OSINIT}" = "sysvinit" ]; then
+    elif [ "${_OSINIT}" = "sysvinit" ] \
+      || [ "${_OSINIT}" = "launchd" ]  \
+      || [ "${_OSINIT}" = "rc" ]; then
         ${SUDO} reboot now
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
