@@ -125,7 +125,7 @@ OS_IS_INSTALLED ()
         return 0
     else
         if [ "${pkg}" = "" ]; then
-            PRINT "Missing: ${program} is not installed." "error"
+            PRINT "Missing: ${program} is not installed."
             return 1
         fi
         PRINT "Missing: ${program} is not installed. Attempting installation..." "info"
