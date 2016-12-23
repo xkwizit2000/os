@@ -115,7 +115,7 @@ OS_INFO ()
 OS_IS_INSTALLED ()
 {
     SPACE_SIGNATURE="program [pkg]"
-    SPACE_CMDDEP="OS_INSTALL_PKG PRINT"
+    SPACE_CMDDEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT"
 
     local program="${1}"
     shift
@@ -123,7 +123,14 @@ OS_IS_INSTALLED ()
     local pkg="${1-}"
     shift $(( $# > 0 ? 1 : 0 ))
 
-    PRINT "Check if ${program} is installed." "debug"
+    local program2="${program}"
+
+    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    OS_ID
+
+    _OS_PROGRAM_TRANSLATE
+
+    PRINT "Check if ${program} (originally ${program2}) is installed." "debug"
     if command -v "${program}" >/dev/null; then
         PRINT "Available: ${program} is installed." "debug"
         return 0
@@ -144,12 +151,15 @@ OS_IS_INSTALLED ()
 # Translates Debian style package names into
 # the current OS package manager naming.
 #
-# Depends on that OS_ID has been called prior.
-# Function expecxts ${pkg} and will alter it.
+# Function expects ${pkg} variable and might
+# adjust it.
 #
 #================
 _OS_PKG_TRANSLATE ()
 {
+    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    OS_ID
+
     # This function should be further added to
     # to handle more packages.
     if [ "${_OSPKGMGR}" = "apk" ]; then
@@ -161,7 +171,45 @@ _OS_PKG_TRANSLATE ()
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         if [ "${pkg}" = "coreutils" ]; then
             pkg="xtra-utils"
+        elif [ "${pkg}" = "lua5.1" ]; then
+            pkg="lua"
         fi
+    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+        if [ "${pkg}" = "lua5.1" ]; then
+            pkg="lua51"
+        elif [ "${pkg}" = "lua5.2" ]; then
+            pkg="lua52"
+        elif [ "${pkg}" = "lua5.3" ]; then
+            pkg="lua53"
+        fi
+    fi
+}
+
+#================
+# _OS_PROGRAM_TRANSLATE
+#
+# Translates Debian style program names into
+# the current OS distributions program naming.
+#
+# Function expects ${program} variable and might
+# adjust it.
+#
+#================
+_OS_PROGRAM_TRANSLATE ()
+{
+    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    OS_ID
+
+    # This function should be further added to
+    # to handle more programs.
+    if [ "${_OSPKGMGR}" = "apk" ]; then
+        :
+    elif [ "${_OSPKGMGR}" = "yum" ]; then
+        if [ "${program}" = "lua5.1" ]; then
+            program="lua"
+        fi
+    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+        :
     fi
 }
 
@@ -189,6 +237,7 @@ OS_INSTALL_PKG ()
 
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
+
     _OS_PKG_TRANSLATE
 
     if [ "$(id -u)" -gt 0 ]; then
@@ -206,13 +255,13 @@ OS_INSTALL_PKG ()
             ${SUDO} apt-get -y install "${pkg}"
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman -S "${pkg}"
+        ${SUDO} pacman -Syu --noconfirm "${pkg}"
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} pacman -S "${pkg}"
+            ${SUDO} pacman -Syu --noconfirm "${pkg}"
         fi
     elif [ "${_OSPKGMGR}" = "yum" ]; then
-        ${SUDO} yum install "${pkg}"
+        ${SUDO} yum -y install "${pkg}"
     elif [ "${_OSPKGMGR}" = "apk" ]; then
         ${SUDO} apk add "${pkg}"
         if [ "$?" -gt 0 ]; then
