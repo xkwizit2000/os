@@ -74,8 +74,6 @@ _tests:
         -
             @include: @{DIR}/../Spacefile.yaml|/harden
         -
-            @include: @{DIR}/../Spacefile.yaml|/disableroot
-        -
             _env:
                 - motdfile: ${DIR}/motd.txt
             @include: @{DIR}/../Spacefile.yaml|/motd
