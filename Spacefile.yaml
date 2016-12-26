@@ -59,7 +59,7 @@ disableroot:
         title: Disable root login.
         desc: |
             Run this to make it so that the root user no longer can login
-            over SSH. This hightens the security of the machine, but make sure
+            over SSH. This heightens the security of the machine, but make sure
             the super user has been setup successfully first.
     _env:
         - CMD: OS_DISABLE_ROOT

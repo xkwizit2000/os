@@ -218,7 +218,7 @@ _OS_PROGRAM_TRANSLATE ()
 # Install a package.
 #
 # Provide only one package at a time for
-# the translatio to work.
+# the translation to work.
 # Give the Debian style name of packages
 # and the function will attempt to translate
 # it to the current package managers name for it.
