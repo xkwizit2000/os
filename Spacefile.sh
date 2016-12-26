@@ -319,7 +319,7 @@ OS_INSTALL_PKG ()
 # Update the system package lists.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 #=======================
 OS_UPDATE ()
@@ -367,7 +367,7 @@ OS_UPDATE ()
 # Upgrade the system.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   Non-zero on error.
@@ -427,7 +427,7 @@ OS_UPGRADE ()
 #   $2: action
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   0: success
@@ -472,7 +472,7 @@ OS_SERVICE ()
 # Reboot the system.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 #=======================
 OS_REBOOT ()
@@ -574,7 +574,7 @@ OS_GROUP_EXIST ()
 #   $2: Path of the pub key file to install for the user.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   0: success
@@ -675,7 +675,7 @@ OS_ADD_USER ()
 #   $1: The name of the user to make into sudo user.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   0: success
@@ -771,7 +771,7 @@ OS_MOTD ()
 # Disable root from logging in both via ssh and physically.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   0: success
@@ -811,7 +811,7 @@ OS_DISABLE_ROOT ()
 #   $1: The name of the user to make inactive.
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 # Returns:
 #   0: success
@@ -854,7 +854,7 @@ OS_DISABLE_USER ()
 #   $1: shell name (optional)
 #
 # Expects:
-#   $SUDO: if not run as root set SUDO=sudo
+#   $SUDO: if not run as root set `SUDO=sudo`
 #
 #============
 OS_SHELL ()
