@@ -628,7 +628,7 @@ OS_CREATE_USER ()
 
     local SUDO="${SUDO-}"
     local home="${_OSHOME}/${targetuser}"
-    OS_ADD_USER "${targetuser}" "${home}" &&
+    OS_ADD_USER "${targetuser}" "${home}" "/bin/sh" &&
     FILE_CHMOD "700" "${home}" &&
     FILE_MKDIRP "${home}/.ssh" &&
     FILE_CHMOD "700" "${home}/.ssh" &&
