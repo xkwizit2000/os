@@ -75,7 +75,7 @@ _tests:
             @include: @{DIR}/../Spacefile.yaml|/harden
         -
             _env:
-                - motdfile: ${DIR}/motd.txt
+                - motdfile: @{DIR}/motd.txt
             @include: @{DIR}/../Spacefile.yaml|/motd
         -
             _env:
@@ -84,10 +84,10 @@ _tests:
         -
             _env:
                 - CMD: OS_IS_INSTALLED -- "vim"
-        -
-            _env:
-                - targetuserdisable: astro
-            @include: @{DIR}/../Spacefile.yaml|/disableuser
+        #-
+        #    _env:
+        #        - targetuserdisable: astro
+        #    @include: @{DIR}/../Spacefile.yaml|/disableuser
 
 _clean:
     _info:
