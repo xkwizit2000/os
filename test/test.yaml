@@ -54,6 +54,8 @@ _tests:
         -
             @include: @{DIR}/../Spacefile.yaml|/update
         -
+            @include: @{DIR}/../Spacefile.yaml|/upgrade
+        -
             @include: @{DIR}/../Spacefile.yaml|/installsudo
         -
             _env:
@@ -61,9 +63,32 @@ _tests:
             @include: @{DIR}/../Spacefile.yaml|/mksudo
             _info:
                 title: Make user into sudo.
+        -
+            @include: @{DIR}/../Spacefile.yaml|/info
+        -
+            @include: @{DIR}/../Spacefile.yaml|/harden
+        -
+            @include: @{DIR}/../Spacefile.yaml|/disableroot
+        -
+            _env:
+                - motdfile: ${DIR}/motd.txt
+            @include: @{DIR}/../Spacefile.yaml|/motd
+        -
+            _env:
+                - pkg: vim
+            @include: @{DIR}/../Spacefile.yaml|/install
+        -
+            _env:
+                - CMD: OS_IS_INSTALLED -- "vim"
+        -
+            _env:
+                - targetuserdisable: astro
+            @include: @{DIR}/../Spacefile.yaml|/disableuser
+
 _clean:
     _info:
         title: Do nothing.
     _env:
         - CMDWRAP: !unset
         - CMD: ":"
+
