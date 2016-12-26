@@ -225,6 +225,10 @@ _OS_PROGRAM_TRANSLATE ()
     fi
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #================
 # OS_INSTALL_PKG
 #
@@ -313,6 +317,10 @@ OS_INSTALL_PKG ()
     PRINT "Package: ${pkg}, installed successfully!" "success"
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #=======================
 # OS_UPDATE
 #
@@ -360,6 +368,10 @@ OS_UPDATE ()
         return 1
     fi
 }
+
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #=======================
 # OS_UPGRADE
@@ -498,6 +510,10 @@ OS_REBOOT ()
     fi
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #=======================
 # OS_USER_EXIST
 #
@@ -531,6 +547,10 @@ OS_USER_EXIST ()
     fi
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #=======================
 # OS_GROUP_EXIST
 #
@@ -563,6 +583,10 @@ OS_GROUP_EXIST ()
         return 1
     fi
 }
+
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #=======================
 # OS_CREATE_USER
@@ -618,6 +642,10 @@ OS_CREATE_USER ()
     fi
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #=======================
 # OS_ADD_USER
 #
@@ -665,6 +693,10 @@ OS_ADD_USER ()
         return 1
     fi
 }
+
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #=======================
 # OS_MKSUDO_USER
@@ -765,6 +797,10 @@ OS_MOTD ()
     FILE_PIPE_WRITE "/etc/motd"
 }
 
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
+
 #=======================
 # OS_DISABLE_ROOT
 #
@@ -801,6 +837,10 @@ OS_DISABLE_ROOT ()
         return 1
     fi
 }
+
+
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #=======================
 # OS_DISABLE_USER
