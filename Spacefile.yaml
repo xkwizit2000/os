@@ -34,6 +34,8 @@ info:
 harden:
     _info:
         title: Harden the machine
+    _env:
+        - CMD: OS_HARDEN
 
 userexist:
     _info:

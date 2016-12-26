@@ -916,3 +916,11 @@ OS_SHELL ()
     ${SUDO} ${shell}
 }
 
+
+OS_HARDEN()
+{
+    SPACE_CMDDEP="PRINT"
+    PRINT "Pending implementation..." "warning"
+    return 0
+}
+
