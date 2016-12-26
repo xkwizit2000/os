@@ -349,7 +349,7 @@ OS_UPDATE ()
     if [ "${_OSPKGMGR}" = "apt" ]; then
         ${SUDO} apt-get update -y
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman -Sy
+        ${SUDO} pacman --noconfirm -Sy
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         :
     elif [ "${_OSPKGMGR}" = "apk" ]; then
@@ -409,7 +409,7 @@ OS_UPGRADE ()
     if [ "${_OSPKGMGR}" = "apt" ]; then
         ${SUDO} apt-get -y upgrade
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman -Syu
+        ${SUDO} pacman --noconfirm -Syu
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         ${SUDO} yum update -y
     elif [ "${_OSPKGMGR}" = "apk" ]; then
