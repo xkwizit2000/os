@@ -173,7 +173,7 @@ it to the current package managers name for it.
 Update the system package lists.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
   
   
@@ -184,7 +184,7 @@ Update the system package lists.
 Upgrade the system.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - Non-zero on error.  
@@ -202,7 +202,7 @@ Control a service.
 - $2: action  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -217,7 +217,7 @@ Control a service.
 Reboot the system.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
   
   
@@ -262,7 +262,7 @@ Create passwordless user and install ssh key for it.
 - $2: Path of the pub key file to install for the user.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -297,7 +297,7 @@ Make a user passwordless SUDO.
 - $1: The name of the user to make into sudo user.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -339,7 +339,7 @@ $1: The path of the motd file to upload.
 Disable root from logging in both via ssh and physically.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -357,7 +357,7 @@ Disable a user from logging in both via ssh and physically.
 - $1: The name of the user to make inactive.  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -375,7 +375,7 @@ Enter userland shell.
 - $1: shell name (optional)  
   
 ### Expects:  
-- $SUDO: if not run as root set SUDOsudo  
+- $SUDO: if not run as root set `SUDOsudo`  
   
   
   
