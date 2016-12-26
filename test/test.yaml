@@ -37,7 +37,7 @@ _platforms:
 _tests:
     -
         -
-            @include: @{DIR}/../Spacefile.yaml|/_install
+            @include: @{DIR}/../Spacefile.yaml|/_dep_install
         -
             _env:
                 - targetuser: astro
