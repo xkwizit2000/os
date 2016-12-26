@@ -64,6 +64,12 @@ _tests:
             _info:
                 title: Make user into sudo.
         -
+            _env:
+                - group: nobody
+            @include: @{DIR}/../Spacefile.yaml|/groupexist
+            _info:
+                title: check so that our group exist.
+        -
             @include: @{DIR}/../Spacefile.yaml|/info
         -
             @include: @{DIR}/../Spacefile.yaml|/harden

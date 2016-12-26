@@ -41,6 +41,12 @@ userexist:
     _env:
         - CMD: OS_USER_EXIST -- ${targetuser-}
 
+groupexist:
+    _info:
+        title: Check if a group exists
+    _env:
+        - CMD: OS_GROUP_EXIST -- ${group-}
+
 installsudo:
     _info:
         title: Install the 'sudo' pkg
