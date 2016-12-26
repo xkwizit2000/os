@@ -19,7 +19,7 @@ clone file
 #================================
 # OS_DEP_INSTALL
 #
-# Do nothing, but conform to /_install/ pattern.
+# Check for dependencies
 #
 #================================
 OS_DEP_INSTALL ()
@@ -29,14 +29,16 @@ OS_DEP_INSTALL ()
 }
 
 #================
+# OS_ID
 #
 # Get the OS identification and package manager.
 #
-# env:
+# Expects:
 #   _OSTYPE
 #   _OSPKGMGR
 #   _OSHOME - Users home dir.
 #   _OSCWD - Current CWD.
+#
 #================
 OS_ID ()
 {
@@ -88,6 +90,7 @@ OS_ID ()
 }
 
 #=============
+# OS_INFO
 #
 # Show some information about the current OS.
 #
@@ -107,9 +110,18 @@ OS_INFO ()
 }
 
 #=============
+# OS_IS_INSTALLED
 #
-# Check if program is installed,
-# if not installed then install it's package if provided.
+# Check if program is installed.
+# If not installed then install its package, if provided.
+#
+# Parameters:
+#   $1: program name
+#   $2: package name
+#
+# Returns:
+#   0: program is available
+#   0: program is not available and failed to install it
 #
 #=============
 OS_IS_INSTALLED ()
@@ -151,8 +163,8 @@ OS_IS_INSTALLED ()
 # Translates Debian style package names into
 # the current OS package manager naming.
 #
-# Function expects ${pkg} variable and might
-# adjust it.
+# Expects:
+#   ${pkg}: package name to adjust
 #
 #================
 _OS_PKG_TRANSLATE ()
@@ -191,8 +203,8 @@ _OS_PKG_TRANSLATE ()
 # Translates Debian style program names into
 # the current OS distributions program naming.
 #
-# Function expects ${program} variable and might
-# adjust it.
+# Expects:
+#   ${program}: program name to translate
 #
 #================
 _OS_PROGRAM_TRANSLATE ()
@@ -214,6 +226,7 @@ _OS_PROGRAM_TRANSLATE ()
 }
 
 #================
+# OS_INSTALL_PKG
 #
 # Install a package.
 #
@@ -222,6 +235,13 @@ _OS_PROGRAM_TRANSLATE ()
 # Give the Debian style name of packages
 # and the function will attempt to translate
 # it to the current package managers name for it.
+#
+# Parameters:
+#   $1: package name
+#
+# Returns:
+#   0: success
+#   1: failed to install package either due to unknown package manager or package name
 #
 #================
 OS_INSTALL_PKG ()
@@ -298,7 +318,7 @@ OS_INSTALL_PKG ()
 #
 # Update the system package lists.
 #
-# env:
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
 #
 #=======================
@@ -346,8 +366,11 @@ OS_UPDATE ()
 #
 # Upgrade the system.
 #
-# env:
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
+#
+# Returns:
+#   Non-zero on error.
 #
 #=======================
 OS_UPGRADE ()
@@ -394,6 +417,23 @@ OS_UPGRADE ()
     fi
 }
 
+#=======================
+# OS_SERVICE
+#
+# Control a service.
+#
+# Parameters:
+#   $1: service name
+#   $2: action
+#
+# Expects:
+#   $SUDO: if not run as root set SUDO=sudo
+#
+# Returns:
+#   0: success
+#   1: failure
+#
+#=======================
 OS_SERVICE ()
 {
     SPACE_SIGNATURE="service action"
@@ -431,7 +471,7 @@ OS_SERVICE ()
 #
 # Reboot the system.
 #
-# env:
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
 #
 #=======================
@@ -463,10 +503,12 @@ OS_REBOOT ()
 #
 # Check if a user does exist.
 #
-# Exits with status 0 if the users does exist, else with status 1.
+# Parameters:
+#   $1: the name of the user to lookup.
 #
-# positional args:
-#   user: the name if the user to lookup.
+# Returns:
+#   0: users does exist
+#   1: failure. User does NOT exist
 #
 #=======================
 OS_USER_EXIST ()
@@ -494,10 +536,12 @@ OS_USER_EXIST ()
 #
 # Check if a group does exist.
 #
-# Exits with status 0 if the group does exist, else with status 1.
+# Parameters:
+#   $1: the name of the group to lookup.
 #
-# positional args:
-#   user: the name if the user to lookup.
+# Returns:
+#   0: group does exist
+#   1: failure. Group does NOT exist
 #
 #=======================
 OS_GROUP_EXIST ()
@@ -525,12 +569,16 @@ OS_GROUP_EXIST ()
 #
 # Create passwordless user and install ssh key for it.
 #
-# env:
+# Parameters:
+#   $1: The name of the user to create.
+#   $2: Path of the pub key file to install for the user.
+#
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
 #
-# positional args:
-#   user: The name of the user to create.
-#   sshpubkeyfile: Path of the pub key file to install for the user.
+# Returns:
+#   0: success
+#   1: failure
 #
 #=======================
 OS_CREATE_USER ()
@@ -575,6 +623,15 @@ OS_CREATE_USER ()
 #
 # Add a user, with a home directory.
 #
+# Parameters:
+#   $1: user name
+#   $2: home path directory
+#   $3: shell path
+#
+# Returns:
+#   0: success
+#   1: failed to call useradd/adduser
+#
 #=======================
 OS_ADD_USER ()
 {
@@ -614,11 +671,15 @@ OS_ADD_USER ()
 #
 # Make a user passwordless SUDO.
 #
-# env:
+# Parameters:
+#   $1: The name of the user to make into sudo user.
+#
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
 #
-# positional args:
-#   targetuser: The name of the user to make into sudo user.
+# Returns:
+#   0: success
+#   1: failure
 #
 #=======================
 OS_MKSUDO_USER ()
@@ -650,6 +711,14 @@ OS_MKSUDO_USER ()
 #=======================
 # OS_USER_ADD_GROUP
 #
+# Add a given user to a group
+#
+# Parameters:
+#   $1: user name
+#   $2: group name
+#
+# Returns:
+#   Non-zero on error.
 #
 #=======================
 OS_USER_ADD_GROUP ()
@@ -675,13 +744,10 @@ OS_USER_ADD_GROUP ()
 # OS_MOTD
 #
 # Copy a motd file into the system.
-# motd is the greeting text that shows when you login.
+# Message of the day is the greeting text that shows when you login.
 #
-# env:
-#   $SUDO: if not run as root set SUDO=sudo
-#
-# positional args;
-#   motdfile: The path of the motd file ti upload.
+# Parameters;
+#   $1: The path of the motd file to upload.
 #
 #=======================
 OS_MOTD ()
@@ -704,8 +770,12 @@ OS_MOTD ()
 #
 # Disable root from logging in both via ssh and physically.
 #
-# env:
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
+#
+# Returns:
+#   0: success
+#   1: failure
 #
 #=======================
 OS_DISABLE_ROOT ()
@@ -737,11 +807,15 @@ OS_DISABLE_ROOT ()
 #
 # Disable a user from logging in both via ssh and physically.
 #
-# env:
+# Parameters:
+#   $1: The name of the user to make inactive.
+#
+# Expects:
 #   $SUDO: if not run as root set SUDO=sudo
 #
-# positional args:
-#   targetuser: The name of the user to make inactive.
+# Returns:
+#   0: success
+#   1: failure
 #
 #=======================
 OS_DISABLE_USER ()
@@ -774,9 +848,13 @@ OS_DISABLE_USER ()
 #============
 # OS_SHELL
 #
-# env:
-#   $SUDO:
+# Enter userland shell.
 #
+# Parameters:
+#   $1: shell name (optional)
+#
+# Expects:
+#   $SUDO: if not run as root set SUDO=sudo
 #
 #============
 OS_SHELL ()
@@ -797,3 +875,4 @@ OS_SHELL ()
     # shellcheck disable=2086
     ${SUDO} ${shell}
 }
+
