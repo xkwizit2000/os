@@ -193,6 +193,10 @@ _OS_PKG_TRANSLATE ()
             pkg="lua52"
         elif [ "${pkg}" = "lua5.3" ]; then
             pkg="lua53"
+        elif [ "${pkg}" = "openssh-server" ]; then
+            pkg="openssh"
+        elif [ "${pkg}" = "openssh-client" ]; then
+            pkg="openssh"
         fi
     fi
 }
