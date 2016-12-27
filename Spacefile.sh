@@ -185,6 +185,8 @@ _OS_PKG_TRANSLATE ()
             pkg="xtra-utils"
         elif [ "${pkg}" = "lua5.1" ]; then
             pkg="lua"
+        elif [ "${pkg}" = "openssh-client" ]; then
+            pkg="openssh-clients"
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
         if [ "${pkg}" = "lua5.1" ]; then
