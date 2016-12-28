@@ -172,6 +172,8 @@ _OS_PKG_TRANSLATE ()
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
 
+    # TODO iterator over $pkg, since there might be many.
+
     # This function should be further added to
     # to handle more packages.
     if [ "${_OSPKGMGR}" = "apk" ]; then
@@ -179,6 +181,8 @@ _OS_PKG_TRANSLATE ()
             pkg="openssh"
         elif [ "${pkg}" = "openssh-client" ]; then
             pkg="openssh"
+        elif [ "${pkg}" = "libyaml-dev" ]; then
+            pkg="yaml-dev"
         fi
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         if [ "${pkg}" = "coreutils" ]; then
@@ -187,6 +191,12 @@ _OS_PKG_TRANSLATE ()
             pkg="lua"
         elif [ "${pkg}" = "openssh-client" ]; then
             pkg="openssh-clients"
+        elif [ "${pkg}" = "libyaml-dev" ]; then
+            pkg="libyaml-devel"
+        elif [ "${pkg}" = "libc-dev" ]; then
+            pkg="glibc-devel glibc-headers"
+        elif [ "${pkg}" = "lua5.1-dev" ]; then
+            pkg="lua-devel"
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
         if [ "${pkg}" = "lua5.1" ]; then
@@ -199,6 +209,12 @@ _OS_PKG_TRANSLATE ()
             pkg="openssh"
         elif [ "${pkg}" = "openssh-client" ]; then
             pkg="openssh"
+        elif [ "${pkg}" = "libyaml-dev" ]; then
+            pkg="libyaml"
+        elif [ "${pkg}" = "libc-dev" ]; then
+            pkg="linux-api-headers"
+        elif [ "${pkg}" = "lua5.1-dev" ]; then
+            pkg="lua51"
         fi
     fi
 }
