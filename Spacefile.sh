@@ -279,36 +279,36 @@ OS_INSTALL_PKG ()
     PRINT "Install package: ${pkg}." "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
-        ${SUDO} apt-get -y install "${pkg}"
+        ${SUDO} apt-get -y install ${pkg}
         if [ "$?" -eq 100 ]; then
             OS_UPDATE
-            ${SUDO} apt-get -y install "${pkg}"
+            ${SUDO} apt-get -y install ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman -Syu --noconfirm "${pkg}"
+        ${SUDO} pacman -Syu --noconfirm ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} pacman -Syu --noconfirm "${pkg}"
+            ${SUDO} pacman -Syu --noconfirm ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "yum" ]; then
-        ${SUDO} yum -y install "${pkg}"
+        ${SUDO} yum -y install ${pkg}
     elif [ "${_OSPKGMGR}" = "apk" ]; then
-        ${SUDO} apk add "${pkg}"
+        ${SUDO} apk add ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} apk add "${pkg}"
+            ${SUDO} apk add ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "brew" ]; then
-        ${SUDO} brew install "${pkg}"
+        ${SUDO} brew install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} brew install "${pkg}"
+            ${SUDO} brew install ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "pkg" ]; then
-        ${SUDO} pkg install "${pkg}"
+        ${SUDO} pkg install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} pkg install "${pkg}"
+            ${SUDO} pkg install ${pkg}
         fi
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
