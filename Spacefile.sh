@@ -183,20 +183,28 @@ _OS_PKG_TRANSLATE ()
             pkg="openssh"
         elif [ "${pkg}" = "libyaml-dev" ]; then
             pkg="yaml-dev"
+        elif [ "${pkg}" = "libreadline-dev" ]; then
+            pkg="readline-dev"
+        elif [ "${pkg}" = "libncurses-dev" ]; then
+            pkg="ncurses-dev"
         fi
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         if [ "${pkg}" = "coreutils" ]; then
             pkg="xtra-utils"
-        elif [ "${pkg}" = "lua5.1" ]; then
-            pkg="lua"
+        #elif [ "${pkg}" = "lua5.1" ]; then
+            #pkg="lua"
         elif [ "${pkg}" = "openssh-client" ]; then
             pkg="openssh-clients"
         elif [ "${pkg}" = "libyaml-dev" ]; then
             pkg="libyaml-devel"
         elif [ "${pkg}" = "libc-dev" ]; then
             pkg="glibc-devel glibc-headers"
-        elif [ "${pkg}" = "lua5.1-dev" ]; then
-            pkg="lua-devel"
+        #elif [ "${pkg}" = "lua5.1-dev" ]; then
+            #pkg="lua-devel"
+        elif [ "${pkg}" = "libreadline-dev" ]; then
+            pkg="readline-devel"
+        elif [ "${pkg}" = "libncurses-dev" ]; then
+            pkg="ncurses-devel"
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
         if [ "${pkg}" = "lua5.1" ]; then
@@ -204,7 +212,7 @@ _OS_PKG_TRANSLATE ()
         elif [ "${pkg}" = "lua5.2" ]; then
             pkg="lua52"
         elif [ "${pkg}" = "lua5.3" ]; then
-            pkg="lua53"
+            pkg="lua"  # NOTE: This is dependant on pacman version since one day "lua" will mean "lua5.4", which is not good.
         elif [ "${pkg}" = "openssh-server" ]; then
             pkg="openssh"
         elif [ "${pkg}" = "openssh-client" ]; then
@@ -215,6 +223,10 @@ _OS_PKG_TRANSLATE ()
             pkg="linux-api-headers"
         elif [ "${pkg}" = "lua5.1-dev" ]; then
             pkg="lua51"
+        elif [ "${pkg}" = "libreadline-dev" ]; then
+            pkg="readline"
+        elif [ "${pkg}" = "libncurses-dev" ]; then
+            pkg="ncurses"
         fi
     fi
 }
@@ -285,6 +297,11 @@ OS_INSTALL_PKG ()
     OS_ID
 
     _OS_PKG_TRANSLATE
+
+    if [ "${pkg}" = "" ]; then
+        PRINT "Package has no target for pkg mgr: ${_OSPKGMGR}." "success"
+        return 0
+    fi
 
     if [ "$(id -u)" -gt 0 ]; then
         local SUDO="${SUDO-}"
