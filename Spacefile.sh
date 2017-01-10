@@ -163,8 +163,11 @@ OS_IS_INSTALLED ()
 # Translates Debian style package names into
 # the current OS package manager naming.
 #
+# A translation could be translated into one or many
+# package names.
+#
 # Expects:
-#   ${pkg}: package name to adjust
+#   ${pkg}: package(s) name(s) to adjust
 #
 #================
 _OS_PKG_TRANSLATE ()
@@ -172,63 +175,69 @@ _OS_PKG_TRANSLATE ()
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
 
-    # TODO iterator over $pkg, since there might be many.
-
-    # This function should be further added to
-    # to handle more packages.
-    if [ "${_OSPKGMGR}" = "apk" ]; then
-        if [ "${pkg}" = "openssh-server" ]; then
-            pkg="openssh"
-        elif [ "${pkg}" = "openssh-client" ]; then
-            pkg="openssh"
-        elif [ "${pkg}" = "libyaml-dev" ]; then
-            pkg="yaml-dev"
-        elif [ "${pkg}" = "libreadline-dev" ]; then
-            pkg="readline-dev"
-        elif [ "${pkg}" = "libncurses-dev" ]; then
-            pkg="ncurses-dev"
+    local pkg2="${pkg}" p=""
+    pkg=""
+    for p in ${pkg2}; do
+        # This function should be further added to
+        # to handle more packages.
+        if [ "${_OSPKGMGR}" = "apk" ]; then
+            if [ "${p}" = "openssh-server" ]; then
+                p="openssh"
+            elif [ "${p}" = "openssh-client" ]; then
+                p="openssh"
+            elif [ "${p}" = "libyaml-dev" ]; then
+                p="yaml-dev"
+            elif [ "${p}" = "libreadline-dev" ]; then
+                p="readline-dev"
+            elif [ "${p}" = "libncurses-dev" ]; then
+                p="ncurses-dev"
+            fi
+        elif [ "${_OSPKGMGR}" = "yum" ]; then
+            if [ "${p}" = "coreutils" ]; then
+                p="xtra-utils"
+            #elif [ "${p}" = "lua5.1" ]; then
+                #p="lua"
+            elif [ "${p}" = "openssh-client" ]; then
+                p="openssh-clients"
+            elif [ "${p}" = "libyaml-dev" ]; then
+                p="libyaml-devel"
+            elif [ "${p}" = "libc-dev" ]; then
+                p="glibc-devel glibc-headers"
+            #elif [ "${p}" = "lua5.1-dev" ]; then
+                #p="lua-devel"
+            elif [ "${p}" = "libreadline-dev" ]; then
+                p="readline-devel"
+            elif [ "${p}" = "libncurses-dev" ]; then
+                p="ncurses-devel"
+            fi
+        elif [ "${_OSPKGMGR}" = "pacman" ]; then
+            if [ "${p}" = "lua5.1" ]; then
+                p="lua51"
+            elif [ "${p}" = "lua5.2" ]; then
+                p="lua52"
+            elif [ "${p}" = "lua5.3" ]; then
+                p="lua"  # NOTE: This is dependant on pacman version since one day "lua" will mean "lua5.4", which is not good.
+            elif [ "${p}" = "openssh-server" ]; then
+                p="openssh"
+            elif [ "${p}" = "openssh-client" ]; then
+                p="openssh"
+            elif [ "${p}" = "libyaml-dev" ]; then
+                p="libyaml"
+            elif [ "${p}" = "libc-dev" ]; then
+                p="linux-api-headers"
+            elif [ "${p}" = "lua5.1-dev" ]; then
+                p="lua51"
+            elif [ "${p}" = "libreadline-dev" ]; then
+                p="readline"
+            elif [ "${p}" = "libncurses-dev" ]; then
+                p="ncurses"
+            fi
         fi
-    elif [ "${_OSPKGMGR}" = "yum" ]; then
-        if [ "${pkg}" = "coreutils" ]; then
-            pkg="xtra-utils"
-        #elif [ "${pkg}" = "lua5.1" ]; then
-            #pkg="lua"
-        elif [ "${pkg}" = "openssh-client" ]; then
-            pkg="openssh-clients"
-        elif [ "${pkg}" = "libyaml-dev" ]; then
-            pkg="libyaml-devel"
-        elif [ "${pkg}" = "libc-dev" ]; then
-            pkg="glibc-devel glibc-headers"
-        #elif [ "${pkg}" = "lua5.1-dev" ]; then
-            #pkg="lua-devel"
-        elif [ "${pkg}" = "libreadline-dev" ]; then
-            pkg="readline-devel"
-        elif [ "${pkg}" = "libncurses-dev" ]; then
-            pkg="ncurses-devel"
+        if [ -z "${p}" ]; then
+            continue
         fi
-    elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        if [ "${pkg}" = "lua5.1" ]; then
-            pkg="lua51"
-        elif [ "${pkg}" = "lua5.2" ]; then
-            pkg="lua52"
-        elif [ "${pkg}" = "lua5.3" ]; then
-            pkg="lua"  # NOTE: This is dependant on pacman version since one day "lua" will mean "lua5.4", which is not good.
-        elif [ "${pkg}" = "openssh-server" ]; then
-            pkg="openssh"
-        elif [ "${pkg}" = "openssh-client" ]; then
-            pkg="openssh"
-        elif [ "${pkg}" = "libyaml-dev" ]; then
-            pkg="libyaml"
-        elif [ "${pkg}" = "libc-dev" ]; then
-            pkg="linux-api-headers"
-        elif [ "${pkg}" = "lua5.1-dev" ]; then
-            pkg="lua51"
-        elif [ "${pkg}" = "libreadline-dev" ]; then
-            pkg="readline"
-        elif [ "${pkg}" = "libncurses-dev" ]; then
-            pkg="ncurses"
-        fi
-    fi
+        pkg="${pkg:+$pkg }${p}"
+    done
 }
 
 #================
@@ -266,16 +275,14 @@ _OS_PROGRAM_TRANSLATE ()
 #================
 # OS_INSTALL_PKG
 #
-# Install a package.
+# Install one or more packages.
 #
-# Provide only one package at a time for
-# the translation to work.
 # Give the Debian style name of packages
 # and the function will attempt to translate
 # it to the current package managers name for it.
 #
 # Parameters:
-#   $1: package name
+#   $1: package(s) name(s)
 #
 # Returns:
 #   0: success
@@ -291,7 +298,7 @@ OS_INSTALL_PKG ()
     local pkg="${1}"
     shift
 
-    PRINT "Install pkg (untranslated): ${pkg}." "debug"
+    PRINT "Install pkg(s) (untranslated): ${pkg}." "debug"
 
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
@@ -299,7 +306,7 @@ OS_INSTALL_PKG ()
     _OS_PKG_TRANSLATE
 
     if [ "${pkg}" = "" ]; then
-        PRINT "Package has no target for pkg mgr: ${_OSPKGMGR}." "success"
+        PRINT "Package has no target for pkg mgr: ${_OSPKGMGR}."
         return 0
     fi
 
@@ -309,7 +316,7 @@ OS_INSTALL_PKG ()
         local SUDO=
     fi
 
-    PRINT "Install package: ${pkg}." "info"
+    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}." "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
         ${SUDO} apt-get -y install ${pkg}
@@ -353,7 +360,7 @@ OS_INSTALL_PKG ()
         return 1
     fi
 
-    PRINT "Package: ${pkg}, installed successfully!" "success"
+    PRINT "Package(s): ${pkg}, installed successfully!" "success"
 }
 
 
