@@ -25,7 +25,7 @@ clone file
 OS_DEP_INSTALL ()
 {
     SPACE_CMDDEP="PRINT"
-    PRINT "No particular dependencies." "success"
+    PRINT "No particular dependencies." "ok"
 }
 
 #================
@@ -360,7 +360,7 @@ OS_INSTALL_PKG ()
         return 1
     fi
 
-    PRINT "Package(s): ${pkg}, installed successfully!" "success"
+    PRINT "Package(s): ${pkg}, installed successfully!" "ok"
 }
 
 
