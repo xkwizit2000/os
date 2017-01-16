@@ -1056,6 +1056,7 @@ OS_SHELL ()
 
 OS_HARDEN()
 {
+    # shellcheck disable=2034
     SPACE_DEP="PRINT"
     PRINT "Pending implementation..." "warning"
     return 0
