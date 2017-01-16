@@ -24,7 +24,7 @@ clone file
 #================================
 OS_DEP_INSTALL ()
 {
-    SPACE_CMDDEP="PRINT"
+    SPACE_DEP="PRINT"
     PRINT "No particular dependencies." "ok"
 }
 
@@ -97,7 +97,7 @@ OS_ID ()
 #=============
 OS_INFO ()
 {
-    SPACE_CMDDEP="OS_ID PRINT"
+    SPACE_DEP="OS_ID PRINT"
 
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
@@ -127,7 +127,7 @@ OS_INFO ()
 OS_IS_INSTALLED ()
 {
     SPACE_SIGNATURE="program [pkg]"
-    SPACE_CMDDEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT"
+    SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT"
 
     local program="${1}"
     shift
@@ -292,8 +292,8 @@ _OS_PROGRAM_TRANSLATE ()
 OS_INSTALL_PKG ()
 {
     SPACE_SIGNATURE="pkg"
-    SPACE_CMDDEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local pkg="${1}"
     shift
@@ -378,8 +378,8 @@ OS_INSTALL_PKG ()
 #=======================
 OS_UPDATE ()
 {
-    SPACE_CMDDEP="OS_ID PRINT"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="OS_ID PRINT"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
     OS_ID
@@ -433,8 +433,8 @@ OS_UPDATE ()
 #=======================
 OS_UPGRADE ()
 {
-    SPACE_CMDDEP="OS_ID OS_UPDATE PRINT"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="OS_ID OS_UPDATE PRINT"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     OS_UPDATE
     if [ "$?" -gt 0 ]; then
@@ -495,8 +495,8 @@ OS_UPGRADE ()
 OS_SERVICE ()
 {
     SPACE_SIGNATURE="service action"
-    SPACE_CMDDEP="PRINT OS_ID"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="PRINT OS_ID"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local service="${1}"
     shift
@@ -535,8 +535,8 @@ OS_SERVICE ()
 #=======================
 OS_REBOOT ()
 {
-    SPACE_CMDDEP="PRINT OS_ID"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="PRINT OS_ID"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     PRINT "Reboot system now." "info"
 
@@ -576,7 +576,7 @@ OS_REBOOT ()
 OS_USER_EXIST ()
 {
     SPACE_SIGNATURE="user"
-    SPACE_CMDDEP="PRINT"
+    SPACE_DEP="PRINT"
 
     local targetuser="${1}"
     shift
@@ -613,7 +613,7 @@ OS_USER_EXIST ()
 OS_GROUP_EXIST ()
 {
     SPACE_SIGNATURE="group"
-    SPACE_CMDDEP="PRINT FILE_GREP"
+    SPACE_DEP="PRINT FILE_GREP"
 
     local group="${1}"
     shift
@@ -654,14 +654,14 @@ OS_GROUP_EXIST ()
 OS_CREATE_USER ()
 {
     SPACE_SIGNATURE="targetuser sshpubkeyfile"
-    SPACE_CMDREDIR="<${2}"
-    SPACE_CMDDEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_REDIR="<${2}"
+    SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local targetuser="${1}"
     shift
 
-    # This is used on SPACE_CMDREDIR.
+    # This is used on SPACE_REDIR.
     # shellcheck disable=2034
     local sshpubkeyfile="${1}"
     shift
@@ -710,7 +710,7 @@ OS_CREATE_USER ()
 OS_ADD_USER ()
 {
     SPACE_SIGNATURE="user home shell"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -763,8 +763,8 @@ OS_ADD_USER ()
 OS_MKSUDO_USER ()
 {
     SPACE_SIGNATURE="targetuser"
-    SPACE_CMDDEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -802,7 +802,7 @@ OS_MKSUDO_USER ()
 OS_USER_ADD_GROUP ()
 {
     SPACE_SIGNATURE="targetuser group"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -832,8 +832,8 @@ OS_MOTD ()
 {
     SPACE_SIGNATURE="motdfile"
     # shellcheck disable=2034
-    SPACE_CMDREDIR="<${1}"
-    SPACE_CMDDEP="FILE_PIPE_WRITE PRINT"
+    SPACE_REDIR="<${1}"
+    SPACE_DEP="FILE_PIPE_WRITE PRINT"
 
     local motdfile="${1}"
     shift
@@ -862,8 +862,8 @@ OS_MOTD ()
 #=======================
 OS_DISABLE_ROOT ()
 {
-    SPACE_CMDDEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     PRINT "Inactivating root account." "info"
 
@@ -907,8 +907,8 @@ OS_DISABLE_ROOT ()
 OS_DISABLE_USER ()
 {
     SPACE_SIGNATURE="targetuser"
-    SPACE_CMDDEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_DEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -948,9 +948,9 @@ OS_SHELL ()
     # shellcheck disable=2034
     SPACE_SIGNATURE="[shell]"
     # shellcheck disable=2034
-    SPACE_CMDDEP="PRINT"
+    SPACE_DEP="PRINT"
     # shellcheck disable=2034
-    SPACE_CMDENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=\${SUDO-}"
 
     local shell="${1:-sh}"
     shift $(( $# > 0 ? 1 : 0 ))
@@ -965,7 +965,7 @@ OS_SHELL ()
 
 OS_HARDEN()
 {
-    SPACE_CMDDEP="PRINT"
+    SPACE_DEP="PRINT"
     PRINT "Pending implementation..." "warning"
     return 0
 }
