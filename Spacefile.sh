@@ -99,7 +99,11 @@ OS_INFO ()
 {
     SPACE_DEP="OS_ID PRINT"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     PRINT "OS type: ${_OSTYPE}."
@@ -137,7 +141,11 @@ OS_IS_INSTALLED ()
 
     local program2="${program}"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     _OS_PROGRAM_TRANSLATE
@@ -172,10 +180,15 @@ OS_IS_INSTALLED ()
 #================
 _OS_PKG_TRANSLATE ()
 {
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
-    local pkg2="${pkg}" p=""
+    local pkg2="${pkg}"
+    local p=""
     pkg=""
     for p in ${pkg2}; do
         # This function should be further added to
@@ -252,7 +265,11 @@ _OS_PKG_TRANSLATE ()
 #================
 _OS_PROGRAM_TRANSLATE ()
 {
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     # This function should be further added to
@@ -300,7 +317,11 @@ OS_INSTALL_PKG ()
 
     PRINT "Install pkg(s) (untranslated): ${pkg}." "debug"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     _OS_PKG_TRANSLATE
@@ -381,7 +402,11 @@ OS_UPDATE ()
     SPACE_DEP="OS_ID PRINT"
     SPACE_ENV="SUDO=\${SUDO-}"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     if [ "$(id -u)" -gt 0 ]; then
@@ -441,7 +466,11 @@ OS_UPGRADE ()
         return 1
     fi
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     if [ "$(id -u)" -gt 0 ]; then
@@ -506,7 +535,11 @@ OS_SERVICE ()
 
     PRINT "Service ${service}, ${action}." "info"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     local SUDO="${SUDO-}"
@@ -540,7 +573,11 @@ OS_REBOOT ()
 
     PRINT "Reboot system now." "info"
 
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     local SUDO="${SUDO-}"
@@ -669,7 +706,11 @@ OS_CREATE_USER ()
     PRINT "Create ${targetuser}." "debug"
 
     # shellcheck disable=2034
-    local _OSTYPE='' _OSPKGMGR='' _OSHOME='' _OSCWD='' _OSINIT=''
+    local _OSTYPE=''
+    local _OSPKGMGR=''
+    local _OSHOME=''
+    local _OSCWD=''
+    local _OSINIT=''
     OS_ID
 
     local SUDO="${SUDO-}"
