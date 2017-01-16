@@ -89,6 +89,10 @@ OS_ID ()
     return 0
 }
 
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
+
 #=============
 # OS_INFO
 #
@@ -112,6 +116,10 @@ OS_INFO ()
     PRINT "OS home directory: ${_OSHOME}."
     PRINT "Current directory: ${_OSCWD}."
 }
+
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=============
 # OS_IS_INSTALLED
@@ -164,6 +172,10 @@ OS_IS_INSTALLED ()
         return $?
     fi
 }
+
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #================
 # _OS_PKG_TRANSLATE
@@ -253,6 +265,10 @@ _OS_PKG_TRANSLATE ()
     done
 }
 
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
+
 #================
 # _OS_PROGRAM_TRANSLATE
 #
@@ -288,6 +304,8 @@ _OS_PROGRAM_TRANSLATE ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #================
 # OS_INSTALL_PKG
@@ -387,6 +405,8 @@ OS_INSTALL_PKG ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_UPDATE
@@ -443,6 +463,8 @@ OS_UPDATE ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_UPGRADE
@@ -504,6 +526,10 @@ OS_UPGRADE ()
     fi
 }
 
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
+
 #=======================
 # OS_SERVICE
 #
@@ -556,6 +582,10 @@ OS_SERVICE ()
         return 1
     fi
 }
+
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_REBOOT
@@ -615,6 +645,7 @@ OS_USER_EXIST ()
     SPACE_SIGNATURE="user"
     SPACE_DEP="PRINT"
 
+    # shellcheck disable=SC2039
     local targetuser="${1}"
     shift
 
@@ -652,6 +683,7 @@ OS_GROUP_EXIST ()
     SPACE_SIGNATURE="group"
     SPACE_DEP="PRINT FILE_GREP"
 
+    # shellcheck disable=SC2039
     local group="${1}"
     shift
 
@@ -670,6 +702,8 @@ OS_GROUP_EXIST ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_CREATE_USER
@@ -732,6 +766,8 @@ OS_CREATE_USER ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_ADD_USER
@@ -784,6 +820,8 @@ OS_ADD_USER ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_MKSUDO_USER
@@ -826,6 +864,10 @@ OS_MKSUDO_USER ()
         return 1
     fi
 }
+
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_USER_ADD_GROUP
@@ -876,6 +918,7 @@ OS_MOTD ()
     SPACE_REDIR="<${1}"
     SPACE_DEP="FILE_PIPE_WRITE PRINT"
 
+    # shellcheck disable=SC2039
     local motdfile="${1}"
     shift
 
@@ -913,6 +956,7 @@ OS_DISABLE_ROOT ()
         return 1
     fi
 
+    # shellcheck disable=SC2039
     local SUDO="${SUDO-}"
     ${SUDO} passwd -d root &&
     FILE_SED "s/^PermitRootLogin.*$/PermitRootLogin no/g" "/etc/ssh/sshd_config" &&
@@ -928,6 +972,8 @@ OS_DISABLE_ROOT ()
 
 # Disable warning about indirectly checking status code
 # shellcheck disable=SC2181
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #=======================
 # OS_DISABLE_USER
@@ -971,6 +1017,10 @@ OS_DISABLE_USER ()
         return 1
     fi
 }
+
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
 
 #============
 # OS_SHELL
