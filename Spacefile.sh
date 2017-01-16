@@ -306,6 +306,8 @@ _OS_PROGRAM_TRANSLATE ()
 # shellcheck disable=SC2181
 # Disable warning about local keyword
 # shellcheck disable=SC2039
+# Disable warning about ${pkg}: word splitting is intended
+# shellcheck disable=SC2086
 
 #================
 # OS_INSTALL_PKG
