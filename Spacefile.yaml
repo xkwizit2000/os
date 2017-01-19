@@ -18,7 +18,7 @@ _dep_install:
     _info:
         title: Check dependencies for this module.
     _env:
-        - CMD: OS_DEP_INSTALL
+        - RUN: OS_DEP_INSTALL
 
 _info:
     title: OS module
@@ -29,44 +29,44 @@ info:
     _info:
         title: Show information about the OS
     _env:
-        - CMD: OS_INFO
+        - RUN: OS_INFO
 
 harden:
     _info:
         title: Harden the machine
     _env:
-        - CMD: OS_HARDEN
+        - RUN: OS_HARDEN
 
 userexist:
     _info:
         title: Check if a user exists
     _env:
-        - CMD: OS_USER_EXIST -- ${targetuser-}
+        - RUN: OS_USER_EXIST -- ${targetuser-}
 
 groupexist:
     _info:
         title: Check if a group exists
     _env:
-        - CMD: OS_GROUP_EXIST -- ${group-}
+        - RUN: OS_GROUP_EXIST -- ${group-}
 
 installsudo:
     _info:
         title: Install the 'sudo' pkg
     _env:
-        - CMD: OS_INSTALL_PKG "sudo"
+        - RUN: OS_INSTALL_PKG "sudo"
 
 createuser:
     _info:
         title: Create a new user
     _env:
         - targetuserpubkeyfile: ${targetuserpubkeyfile:-${SSHPUBKEYFILE-}}
-        - CMD: OS_CREATE_USER -- ${targetuser-} ${targetuserpubkeyfile-}
+        - RUN: OS_CREATE_USER -- ${targetuser-} ${targetuserpubkeyfile-}
 
 mksudo:
     _info:
         title: Make an existing user into sudo
     _env:
-        - CMD: OS_MKSUDO_USER -- ${targetuser-}
+        - RUN: OS_MKSUDO_USER -- ${targetuser-}
 
 disableroot:
     _info:
@@ -76,7 +76,7 @@ disableroot:
             over SSH. This increases the security of the machine.
             Note: make sure the super user has been setup successfully first.
     _env:
-        - CMD: OS_DISABLE_ROOT
+        - RUN: OS_DISABLE_ROOT
 
 disableuser:
     _info:
@@ -84,7 +84,7 @@ disableuser:
         desc: |
             Disable a user from logging in.
     _env:
-        - CMD: OS_DISABLE_USER -- ${targetuserdisable-}
+        - RUN: OS_DISABLE_USER -- ${targetuserdisable-}
 
 motd:
     _info:
@@ -92,25 +92,25 @@ motd:
     _env:
         - motdfile: ${motdfile:-@{DIR}/motd}
     _env:
-        - CMD: OS_MOTD -- ${motdfile}
+        - RUN: OS_MOTD -- ${motdfile}
 
 update:
     _info:
         title: Update the OS package lists
     _env:
-        - CMD: OS_UPDATE
+        - RUN: OS_UPDATE
 
 reboot:
     _info:
         title: Reboot the system
     _env:
-        - CMD: OS_REBOOT
+        - RUN: OS_REBOOT
 
 upgrade:
     _info:
         title: Update and upgrade OS
     _env:
-        - CMD: OS_UPGRADE
+        - RUN: OS_UPGRADE
 
 service:
     _info:
@@ -118,14 +118,14 @@ service:
     _env:
         - service: ${service-}
         - action: ${action-}
-        - CMD: OS_SERVICE ${service-} ${action-}
+        - RUN: OS_SERVICE ${service-} ${action-}
 
 shell:
     _info:
         title: Enter into shell
     _env:
         - shell: sh
-        - CMD: OS_SHELL ${service-}
+        - RUN: OS_SHELL ${service-}
 
 install:
     _info:
@@ -135,5 +135,4 @@ install:
             Always provide Debian names.
     _env:
         - pkg: ${pkg-}
-        - CMD: OS_INSTALL_PKG ${pkg-}
-
+        - RUN: OS_INSTALL_PKG ${pkg-}

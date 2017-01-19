@@ -330,7 +330,7 @@ OS_INSTALL_PKG ()
 {
     SPACE_SIGNATURE="pkg"
     SPACE_DEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local pkg="${1}"
     shift
@@ -422,7 +422,7 @@ OS_INSTALL_PKG ()
 OS_UPDATE ()
 {
     SPACE_DEP="OS_ID PRINT"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local _OSTYPE=''
     local _OSPKGMGR=''
@@ -483,7 +483,7 @@ OS_UPDATE ()
 OS_UPGRADE ()
 {
     SPACE_DEP="OS_ID OS_UPDATE PRINT"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     OS_UPDATE
     if [ "$?" -gt 0 ]; then
@@ -553,7 +553,7 @@ OS_SERVICE ()
 {
     SPACE_SIGNATURE="service action"
     SPACE_DEP="PRINT OS_ID"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local service="${1}"
     shift
@@ -601,7 +601,7 @@ OS_SERVICE ()
 OS_REBOOT ()
 {
     SPACE_DEP="PRINT OS_ID"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     PRINT "Reboot system now." "info"
 
@@ -729,7 +729,7 @@ OS_CREATE_USER ()
     SPACE_SIGNATURE="targetuser sshpubkeyfile"
     SPACE_REDIR="<${2}"
     SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -789,7 +789,7 @@ OS_CREATE_USER ()
 OS_ADD_USER ()
 {
     SPACE_SIGNATURE="user home shell"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -845,7 +845,7 @@ OS_MKSUDO_USER ()
 {
     SPACE_SIGNATURE="targetuser"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -887,7 +887,7 @@ OS_MKSUDO_USER ()
 OS_USER_ADD_GROUP ()
 {
     SPACE_SIGNATURE="targetuser group"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -949,7 +949,7 @@ OS_MOTD ()
 OS_DISABLE_ROOT ()
 {
     SPACE_DEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     PRINT "Inactivating root account." "info"
 
@@ -997,7 +997,7 @@ OS_DISABLE_USER ()
 {
     SPACE_SIGNATURE="targetuser"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -1043,7 +1043,7 @@ OS_SHELL ()
     # shellcheck disable=2034
     SPACE_DEP="PRINT"
     # shellcheck disable=2034
-    SPACE_ENV="SUDO=\${SUDO-}"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local shell="${1:-sh}"
     shift $(( $# > 0 ? 1 : 0 ))
@@ -1063,4 +1063,3 @@ OS_HARDEN()
     PRINT "Pending implementation..." "warning"
     return 0
 }
-
