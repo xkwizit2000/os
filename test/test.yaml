@@ -37,57 +37,57 @@ _platforms:
 _tests:
     -
         -
-            @include: @{DIR}/../Spacefile.yaml|/_dep_install
+            @include: @{DIR}/../Spacefile.yaml|/_dep_install/
         -
             _env:
                 - targetuser: astro
                 - targetuserpubkeyfile: @{DIR}/key.pub
-            @include: @{DIR}/../Spacefile.yaml|/createuser
+            @include: @{DIR}/../Spacefile.yaml|/createuser/
             _info:
                 title: Create a user.
         -
             _env:
                 - targetuser: astro
-            @include: @{DIR}/../Spacefile.yaml|/userexist
+            @include: @{DIR}/../Spacefile.yaml|/userexist/
             _info:
                 title: check so that our user exist.
         -
-            @include: @{DIR}/../Spacefile.yaml|/update
+            @include: @{DIR}/../Spacefile.yaml|/update/
         -
-            @include: @{DIR}/../Spacefile.yaml|/upgrade
+            @include: @{DIR}/../Spacefile.yaml|/upgrade/
         -
-            @include: @{DIR}/../Spacefile.yaml|/installsudo
+            @include: @{DIR}/../Spacefile.yaml|/installsudo/
         -
             _env:
                 - targetuser: astro
-            @include: @{DIR}/../Spacefile.yaml|/mksudo
+            @include: @{DIR}/../Spacefile.yaml|/mksudo/
             _info:
                 title: Make user into sudo.
         -
             _env:
                 - group: users
-            @include: @{DIR}/../Spacefile.yaml|/groupexist
+            @include: @{DIR}/../Spacefile.yaml|/groupexist/
             _info:
                 title: check so that our group exist.
         -
-            @include: @{DIR}/../Spacefile.yaml|/info
+            @include: @{DIR}/../Spacefile.yaml|/info/
         -
-            @include: @{DIR}/../Spacefile.yaml|/harden
+            @include: @{DIR}/../Spacefile.yaml|/harden/
         -
             _env:
                 - motdfile: @{DIR}/motd.txt
-            @include: @{DIR}/../Spacefile.yaml|/motd
+            @include: @{DIR}/../Spacefile.yaml|/motd/
         -
             _env:
                 - pkg: vim
-            @include: @{DIR}/../Spacefile.yaml|/install
+            @include: @{DIR}/../Spacefile.yaml|/install/
         -
             _env:
                 - RUN: OS_IS_INSTALLED -- "vim"
         #-
         #    _env:
         #        - targetuserdisable: astro
-        #    @include: @{DIR}/../Spacefile.yaml|/disableuser
+        #    @include: @{DIR}/../Spacefile.yaml|/disableuser/
 
 _clean:
     _info:
