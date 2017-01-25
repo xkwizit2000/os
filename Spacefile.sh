@@ -14,15 +14,13 @@
 # limitations under the License.
 #
 
-clone file
-
 #================================
 # OS_DEP_INSTALL
 #
 # Check for dependencies
 #
 #================================
-OS_DEP_INSTALL ()
+OS_DEP_INSTALL()
 {
     SPACE_DEP="PRINT"
     PRINT "No particular dependencies." "ok"
@@ -40,7 +38,7 @@ OS_DEP_INSTALL ()
 #   _OSCWD - Current CWD.
 #
 #================
-OS_ID ()
+OS_ID()
 {
     _OSTYPE="gnu"
     _OSHOME="/home"
@@ -99,7 +97,7 @@ OS_ID ()
 # Show some information about the current OS.
 #
 #=============
-OS_INFO ()
+OS_INFO()
 {
     SPACE_DEP="OS_ID PRINT"
 
@@ -136,7 +134,7 @@ OS_INFO ()
 #   0: program is not available and failed to install it
 #
 #=============
-OS_IS_INSTALLED ()
+OS_IS_INSTALLED()
 {
     SPACE_SIGNATURE="program [pkg]"
     SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT"
@@ -190,7 +188,7 @@ OS_IS_INSTALLED ()
 #   ${pkg}: package(s) name(s) to adjust
 #
 #================
-_OS_PKG_TRANSLATE ()
+_OS_PKG_TRANSLATE()
 {
     local _OSTYPE=''
     local _OSPKGMGR=''
@@ -279,7 +277,7 @@ _OS_PKG_TRANSLATE ()
 #   ${program}: program name to translate
 #
 #================
-_OS_PROGRAM_TRANSLATE ()
+_OS_PROGRAM_TRANSLATE()
 {
     local _OSTYPE=''
     local _OSPKGMGR=''
@@ -326,7 +324,7 @@ _OS_PROGRAM_TRANSLATE ()
 #   1: failed to install package either due to unknown package manager or package name
 #
 #================
-OS_INSTALL_PKG ()
+OS_INSTALL_PKG()
 {
     SPACE_SIGNATURE="pkg"
     SPACE_DEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
@@ -419,7 +417,7 @@ OS_INSTALL_PKG ()
 #   $SUDO: if not run as root set `SUDO=sudo`
 #
 #=======================
-OS_UPDATE ()
+OS_UPDATE()
 {
     SPACE_DEP="OS_ID PRINT"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -480,7 +478,7 @@ OS_UPDATE ()
 #   Non-zero on error.
 #
 #=======================
-OS_UPGRADE ()
+OS_UPGRADE()
 {
     SPACE_DEP="OS_ID OS_UPDATE PRINT"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -549,7 +547,7 @@ OS_UPGRADE ()
 #   1: failure
 #
 #=======================
-OS_SERVICE ()
+OS_SERVICE()
 {
     SPACE_SIGNATURE="service action"
     SPACE_DEP="PRINT OS_ID"
@@ -598,7 +596,7 @@ OS_SERVICE ()
 #   $SUDO: if not run as root set `SUDO=sudo`
 #
 #=======================
-OS_REBOOT ()
+OS_REBOOT()
 {
     SPACE_DEP="PRINT OS_ID"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -642,7 +640,7 @@ OS_REBOOT ()
 #   1: failure. User does NOT exist
 #
 #=======================
-OS_USER_EXIST ()
+OS_USER_EXIST()
 {
     SPACE_SIGNATURE="user"
     SPACE_DEP="PRINT"
@@ -680,7 +678,7 @@ OS_USER_EXIST ()
 #   1: failure. Group does NOT exist
 #
 #=======================
-OS_GROUP_EXIST ()
+OS_GROUP_EXIST()
 {
     SPACE_SIGNATURE="group"
     SPACE_DEP="PRINT FILE_GREP"
@@ -724,7 +722,7 @@ OS_GROUP_EXIST ()
 #   1: failure
 #
 #=======================
-OS_CREATE_USER ()
+OS_CREATE_USER()
 {
     SPACE_SIGNATURE="targetuser sshpubkeyfile"
     SPACE_REDIR="<${2}"
@@ -786,7 +784,7 @@ OS_CREATE_USER ()
 #   1: failed to call useradd/adduser
 #
 #=======================
-OS_ADD_USER ()
+OS_ADD_USER()
 {
     SPACE_SIGNATURE="user home shell"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -841,7 +839,7 @@ OS_ADD_USER ()
 #   1: failure
 #
 #=======================
-OS_MKSUDO_USER ()
+OS_MKSUDO_USER()
 {
     SPACE_SIGNATURE="targetuser"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
@@ -884,7 +882,7 @@ OS_MKSUDO_USER ()
 #   Non-zero on error.
 #
 #=======================
-OS_USER_ADD_GROUP ()
+OS_USER_ADD_GROUP()
 {
     SPACE_SIGNATURE="targetuser group"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -913,7 +911,7 @@ OS_USER_ADD_GROUP ()
 #   $1: The path of the motd file to upload.
 #
 #=======================
-OS_MOTD ()
+OS_MOTD()
 {
     SPACE_SIGNATURE="motdfile"
     # shellcheck disable=2034
@@ -946,7 +944,7 @@ OS_MOTD ()
 #   1: failure
 #
 #=======================
-OS_DISABLE_ROOT ()
+OS_DISABLE_ROOT()
 {
     SPACE_DEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -993,7 +991,7 @@ OS_DISABLE_ROOT ()
 #   1: failure
 #
 #=======================
-OS_DISABLE_USER ()
+OS_DISABLE_USER()
 {
     SPACE_SIGNATURE="targetuser"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
@@ -1036,7 +1034,7 @@ OS_DISABLE_USER ()
 #   $SUDO: if not run as root set `SUDO=sudo`
 #
 #============
-OS_SHELL ()
+OS_SHELL()
 {
     # shellcheck disable=2034
     SPACE_SIGNATURE="[shell]"
