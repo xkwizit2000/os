@@ -1,5 +1,5 @@
 #
-# Copyright 2016 Blockie AB
+# Copyright 2016-2017 Blockie AB
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 ---
-@clone: file
+_clone:
+    @clone: file string
+@include: |/_clone/
 
 _dep_install:
     _info:
@@ -24,7 +26,7 @@ _dep_install:
 
 _info:
     title: OS module
-    desc:|
+    desc: |
         Handle operating system tasks such as user processes, packages and services management.
 
 info:
@@ -127,7 +129,7 @@ shell:
         title: Enter into shell
     _env:
         - shell: sh
-        - RUN: OS_SHELL ${service-}
+        - RUN: OS_SHELL ${shell-}
 
 install:
     _info:
