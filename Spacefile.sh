@@ -40,13 +40,16 @@ OS_DEP_INSTALL()
 #================
 OS_ID()
 {
+    SPACE_DEP="OS_COMMAND"
+    SPACE_ENV="SUDO=${SUDO-}"
+
     _OSTYPE="gnu"
     _OSHOME="/home"
     _OSCWD="$(pwd)"
     _OSPKGMGR=
     _OSINIT="sysvinit"
 
-    if command -v "systemctl" >/dev/null; then
+    if OS_COMMAND "systemctl" >/dev/null; then
         _OSINIT="systemd"
     fi
 
@@ -64,20 +67,20 @@ OS_ID()
 
     # Some releases are more tricky.
     if [ "${_OSPKGMGR}" = "" ]; then
-        if command -v "apt-get" >/dev/null; then
+        if OS_COMMAND "apt-get" >/dev/null; then
             _OSPKGMGR="apt"
-        elif command -v "pacman" >/dev/null; then
+        elif OS_COMMAND "pacman" >/dev/null; then
             _OSPKGMGR="pacman"
-        elif command -v "yum" >/dev/null; then
+        elif OS_COMMAND "yum" >/dev/null; then
             _OSPKGMGR="yum"
-        elif command -v "apk" >/dev/null; then
+        elif OS_COMMAND "apk" >/dev/null; then
             _OSPKGMGR="apk"
-        elif command -v "brew" >/dev/null; then
+        elif OS_COMMAND "brew" >/dev/null; then
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
             _OSHOME="/Users"
             _OSINIT="launchd"
-        elif command -v "pkg" >/dev/null; then
+        elif OS_COMMAND "pkg" >/dev/null; then
             _OSPKGMGR="pkg"
             _OSTYPE="FreeBSD"
             _OSINIT="rc"
@@ -137,7 +140,8 @@ OS_INFO()
 OS_IS_INSTALLED()
 {
     SPACE_SIGNATURE="program [pkg]"
-    SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT"
+    SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT OS_COMMAND"
+    SPACE_ENV="SUDO=${SUDO-}"
 
     local program="${1}"
     shift
@@ -157,7 +161,7 @@ OS_IS_INSTALLED()
     _OS_PROGRAM_TRANSLATE
 
     PRINT "Check if ${program} (originally ${program2}) is installed." "debug"
-    if command -v "${program}" >/dev/null; then
+    if OS_COMMAND "${program}" >/dev/null; then
         PRINT "Available: ${program} is installed." "debug"
         return 0
     else
@@ -355,7 +359,7 @@ OS_INSTALL_PKG()
         local SUDO=
     fi
 
-    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}." "info"
+    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}. SUDO=${SUDO}" "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
         ${SUDO} apt-get -y install ${pkg}
@@ -749,7 +753,7 @@ OS_CREATE_USER()
 
     local SUDO="${SUDO-}"
     local home="${_OSHOME}/${targetuser}"
-    OS_ADD_USER "${targetuser}" "${home}" "/bin/sh" &&
+    OS_ADD_USER "${targetuser}" "${home}" &&
     FILE_CHMOD "700" "${home}" &&
     FILE_MKDIRP "${home}/.ssh" &&
     FILE_CHMOD "700" "${home}/.ssh" &&
@@ -786,7 +790,8 @@ OS_CREATE_USER()
 #=======================
 OS_ADD_USER()
 {
-    SPACE_SIGNATURE="user home shell"
+    SPACE_SIGNATURE="user home [shell]"
+    SPACE_DEP="OS_COMMAND"
     SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
@@ -795,25 +800,64 @@ OS_ADD_USER()
     local home="${1}"
     shift
 
-    local shpath="${1}"
+    local shpath="${1-}"
     shift $(( $# > 0 ? 1 : 0 ))
 
     if [ "${shpath}" = "" ]; then
-        shpath="$(command -v bash)"
+        shpath="$(OS_COMMAND bash)"
         if [ "$?" -gt 0 ]; then
-            shpath="$(command -v sh)"
+            shpath="$(OS_COMMAND sh)"
         fi
     fi
 
     local SUDO="${SUDO-}"
 
-    if command -v "useradd" >/dev/null; then
+    if OS_COMMAND useradd >/dev/null; then
         ${SUDO} useradd -m -d "${home}" -s "${shpath}" -U "${targetuser}"
-    elif command -v "adduser" >/dev/null; then
+    elif OS_COMMAND adduser >/dev/null; then
         ${SUDO} adduser -D -h "${home}" -s "${shpath}" "${targetuser}"
     else
         PRINT "No useradd/adduser installed." "error"
         return 1
+    fi
+}
+
+#===========
+# OS_COMMAND
+#
+# Run 'command' to look for existance of command.
+# If $SUDO set then will run in sudo shell, this is
+# useful because PATH might be diferent when running as sudo.
+#
+# Parameters:
+#   $1: command to look for
+#
+# Expects:
+#   $SUDO to be set if command will be run as sudo.
+#
+# Return:
+#   Same as 'command'
+#
+#===========
+OS_COMMAND()
+{
+    SPACE_SIGNATURE="command"
+    SPACE_ENV="SUDO=${SUDO-}"
+
+    local cmd="${1}"
+    shift
+
+    local shpath=
+    shpath="$(command -v sh)"
+    if [ "$?" -gt 0 ]; then
+        shpath="$(command -v bash)"
+    fi
+
+    local SUDO="${SUDO-}"
+    if [ -n "${SUDO}" ]; then
+        ${SUDO} ${shpath} -c "command -v ${cmd}" >/dev/null
+    else
+        command -v ${cmd} >/dev/null
     fi
 }
 
@@ -886,6 +930,7 @@ OS_USER_ADD_GROUP()
 {
     SPACE_SIGNATURE="targetuser group"
     SPACE_ENV="SUDO=${SUDO-}"
+    SPACE_DEP="OS_COMMAND PRINT"
 
     local targetuser="${1}"
     shift
@@ -894,10 +939,14 @@ OS_USER_ADD_GROUP()
     shift
 
     local SUDO="${SUDO-}"
-    if command -v "usermod" >/dev/null; then
+    if OS_COMMAND usermod >/dev/null; then
+        PRINT "User usermod -Ag to add the user: '${targetuser}' to the group: '${group}'" "debug"
         ${SUDO} usermod -aG "${group}" "${targetuser}"
-    elif command -v "addgroup" >/dev/null; then
+    elif OS_COMMAND addgroup >/dev/null; then
         ${SUDO} addgroup "${targetuser}" "${group}"
+    else
+        PRINT "Nor 'usermod' nor 'addgroup' found, can't add user to group." "error"
+        return 1
     fi
 }
 
