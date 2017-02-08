@@ -1077,7 +1077,8 @@ OS_DISABLE_USER()
 # Enter userland shell.
 #
 # Parameters:
-#   $1: shell name (optional)
+#   $1: shell name (optional).
+#   $@: optional commands to run in shell.
 #
 # Expects:
 #   $SUDO: if not run as root set `SUDO=sudo`
@@ -1086,20 +1087,28 @@ OS_DISABLE_USER()
 OS_SHELL()
 {
     # shellcheck disable=2034
-    SPACE_SIGNATURE="[shell]"
+    SPACE_SIGNATURE="[shell command]"
     # shellcheck disable=2034
-    SPACE_DEP="PRINT"
+    SPACE_DEP="PRINT STRING_ESCAPE"
     # shellcheck disable=2034
     SPACE_ENV="SUDO=${SUDO-}"
 
     local shell="${1:-sh}"
     shift $(( $# > 0 ? 1 : 0 ))
 
-    PRINT "Enter shell: ${shell}." "debug"
+    local cmd="$@"
 
     local SUDO="${SUDO-}"
-    # shellcheck disable=2086
-    ${SUDO} ${shell}
+    if [ -z "${cmd}" ]; then
+        PRINT "Entering shell: ${shell}." "debug"
+        # shellcheck disable=2086
+        ${SUDO} ${shell}
+    else
+        PRINT "Exec command in shell: ${shell}." "debug"
+        # shellcheck disable=2086
+        STRING_ESCAPE "cmd" '"$'
+        ${SUDO} ${shell} -c "${cmd}"
+    fi
 }
 
 
