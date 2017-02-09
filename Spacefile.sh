@@ -63,7 +63,7 @@ OS_ID()
     [ -f "/etc/arch-release" ] && _OSPKGMGR="pacman"
     [ -d "/etc/yum" ] && _OSPKGMGR="yum"
     [ -f "/etc/redhat-release" ] && _OSPKGMGR="yum"
-    [ -f "/etc/alpine-release" ] && _OSPKGMGR="apk"
+    [ -f "/etc/alpine-release" ] && { _OSPKGMGR="apk"; _OSTYPE="busybox"; }
 
     # Some releases are more tricky.
     if [ "${_OSPKGMGR}" = "" ]; then
@@ -75,6 +75,10 @@ OS_ID()
             _OSPKGMGR="yum"
         elif OS_COMMAND "apk" >/dev/null; then
             _OSPKGMGR="apk"
+            # We assume Alpine Linux runs on BusyBox.
+            # We could have a more fine grained check,
+            # but we would have to execute 'ls' a couple of times to do that.
+            _OSTYPE="busybox"
         elif OS_COMMAND "brew" >/dev/null; then
             _OSPKGMGR="brew"
             _OSTYPE="darwin"
