@@ -853,6 +853,7 @@ OS_COMMAND()
 
     local shpath=
     shpath="$(command -v sh)"
+    # shellcheck disable=2181
     if [ "$?" -gt 0 ]; then
         shpath="$(command -v bash)"
     fi
