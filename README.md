@@ -3,6 +3,7 @@
 Handle operating system tasks such as user processes, packages and services management.
 
 
+
 ## /createuser/
 	Create a new user
 
@@ -13,12 +14,18 @@ Handle operating system tasks such as user processes, packages and services mana
 	Run this to make it so that the root user no longer can login
 	over SSH. This increases the security of the machine.
 	Note: make sure the super user has been setup successfully first.
+	
 
 
 ## /disableuser/
 	Disable an user account
 
 	Disable a user from logging in.
+	
+
+
+## /groupexist/
+	Check if a group exists
 
 
 ## /harden/
@@ -34,6 +41,7 @@ Handle operating system tasks such as user processes, packages and services mana
 
 	Pkg name as positional argument.
 	Always provide Debian names.
+	
 
 
 ## /installsudo/
@@ -74,7 +82,7 @@ Handle operating system tasks such as user processes, packages and services mana
 
 # Functions 
 
-## OS\_DEP\_INSTALL ()  
+## OS\_DEP\_INSTALL()  
   
   
   
@@ -82,7 +90,7 @@ Check for dependencies
   
   
   
-## OS\_ID ()  
+## OS\_ID()  
   
   
   
@@ -96,7 +104,7 @@ Get the OS identification and package manager.
   
   
   
-## OS\_INFO ()  
+## OS\_INFO()  
   
   
   
@@ -104,7 +112,7 @@ Show some information about the current OS.
   
   
   
-## OS\_IS\_INSTALLED ()  
+## OS\_IS\_INSTALLED()  
   
   
   
@@ -121,19 +129,22 @@ If not installed then install its package, if provided.
   
   
   
-## \_OS\_PKG\_TRANSLATE ()  
+## \_OS\_PKG\_TRANSLATE()  
   
   
   
 Translates Debian style package names into  
 the current OS package manager naming.  
   
+A translation could be translated into one or many  
+package names.  
+  
 ### Expects:  
-- ${pkg}: package name to adjust  
+- ${pkg}: package(s) name(s) to adjust  
   
   
   
-## \_OS\_PROGRAM\_TRANSLATE ()  
+## \_OS\_PROGRAM\_TRANSLATE()  
   
   
   
@@ -145,20 +156,18 @@ the current OS distributions program naming.
   
   
   
-## OS\_INSTALL\_PKG ()  
+## OS\_INSTALL\_PKG()  
   
   
   
-Install a package.  
+Install one or more packages.  
   
-Provide only one package at a time for  
-the translation to work.  
 Give the Debian style name of packages  
 and the function will attempt to translate  
 it to the current package managers name for it.  
   
 ### Parameters:  
-- $1: package name  
+- $1: package(s) name(s)  
   
 ### Returns:  
 - 0: success  
@@ -166,7 +175,7 @@ it to the current package managers name for it.
   
   
   
-## OS\_UPDATE ()  
+## OS\_UPDATE()  
   
   
   
@@ -177,7 +186,7 @@ Update the system package lists.
   
   
   
-## OS\_UPGRADE ()  
+## OS\_UPGRADE()  
   
   
   
@@ -191,7 +200,7 @@ Upgrade the system.
   
   
   
-## OS\_SERVICE ()  
+## OS\_SERVICE()  
   
   
   
@@ -210,7 +219,7 @@ Control a service.
   
   
   
-## OS\_REBOOT ()  
+## OS\_REBOOT()  
   
   
   
@@ -221,7 +230,7 @@ Reboot the system.
   
   
   
-## OS\_USER\_EXIST ()  
+## OS\_USER\_EXIST()  
   
   
   
@@ -236,7 +245,7 @@ Check if a user does exist.
   
   
   
-## OS\_GROUP\_EXIST ()  
+## OS\_GROUP\_EXIST()  
   
   
   
@@ -251,7 +260,7 @@ Check if a group does exist.
   
   
   
-## OS\_CREATE\_USER ()  
+## OS\_CREATE\_USER()  
   
   
   
@@ -270,7 +279,7 @@ Create passwordless user and install ssh key for it.
   
   
   
-## OS\_ADD\_USER ()  
+## OS\_ADD\_USER()  
   
   
   
@@ -287,7 +296,26 @@ Add a user, with a home directory.
   
   
   
-## OS\_MKSUDO\_USER ()  
+## OS\_COMMAND()  
+  
+  
+  
+Run 'command' to look for existance of command.  
+If $SUDO set then will run in sudo shell, this is  
+useful because PATH might be diferent when running as sudo.  
+  
+### Parameters:  
+- $1: command to look for  
+  
+### Expects:  
+- $SUDO to be set if command will be run as sudo.  
+  
+- Return:  
+- Same as 'command'  
+  
+  
+  
+## OS\_MKSUDO\_USER()  
   
   
   
@@ -305,7 +333,7 @@ Make a user passwordless SUDO.
   
   
   
-## OS\_USER\_ADD\_GROUP ()  
+## OS\_USER\_ADD\_GROUP()  
   
   
   
@@ -320,7 +348,7 @@ Add a given user to a group
   
   
   
-## OS\_MOTD ()  
+## OS\_MOTD()  
   
   
   
@@ -332,7 +360,7 @@ $1: The path of the motd file to upload.
   
   
   
-## OS\_DISABLE\_ROOT ()  
+## OS\_DISABLE\_ROOT()  
   
   
   
@@ -347,7 +375,7 @@ Disable root from logging in both via ssh and physically.
   
   
   
-## OS\_DISABLE\_USER ()  
+## OS\_DISABLE\_USER()  
   
   
   
@@ -365,14 +393,15 @@ Disable a user from logging in both via ssh and physically.
   
   
   
-## OS\_SHELL ()  
+## OS\_SHELL()  
   
   
   
 Enter userland shell.  
   
 ### Parameters:  
-- $1: shell name (optional)  
+- $1: shell name (optional).  
+- $@: optional commands to run in shell.  
   
 ### Expects:  
 - $SUDO: if not run as root set `SUDOsudo`  
