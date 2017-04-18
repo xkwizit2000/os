@@ -16,6 +16,8 @@
 ---
 _clone:
     @clone: file string
+    @include: file|/_clone/
+    @include: string|/_clone/
 @include: |/_clone/
 
 _dep_install:
