@@ -29,7 +29,7 @@ _dep_install:
 _info:
     title: OS module
     desc: |
-        Handle operating system tasks such as user processes, packages and services management.
+        Handle operating system tasks such as user management, packages and services management.
 
 info:
     _info:
@@ -47,32 +47,69 @@ userexist:
     _info:
         title: Check if a user exists
     _env:
-        - RUN: OS_USER_EXIST -- ${targetuser-}
+        - targetuser:
+            title: User to check if exists.
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: User
+                    values:
+                        - user
+        - RUN: OS_USER_EXIST -- "${targetuser}"
 
 groupexist:
     _info:
         title: Check if a group exists
     _env:
-        - RUN: OS_GROUP_EXIST -- ${group-}
+        - group:
+            title: Group name
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: Group
+                    values:
+                        - group
+        - RUN: OS_GROUP_EXIST -- "${group}"
 
 installsudo:
     _info:
         title: Install the 'sudo' pkg
     _env:
-        - RUN: OS_INSTALL_PKG "sudo"
+        - RUN: OS_INSTALL_PKG -- "sudo"
 
 createuser:
     _info:
         title: Create a new user
     _env:
-        - targetuserpubkeyfile: ${targetuserpubkeyfile:-${SSHPUBKEYFILE-}}
-        - RUN: OS_CREATE_USER -- ${targetuser-} ${targetuserpubkeyfile-}
+        - targetuser:
+            title: User to create
+        - targetuserpubkeyfile:
+            title: Public key of the user
+            completion: G
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: User
+                    values:
+                        - user
+                -
+                    title: Public key file
+                    completion: G
+        - RUN: OS_CREATE_USER -- "${targetuser}" "${targetuserpubkeyfile}"
 
 mksudo:
     _info:
         title: Make an existing user into sudo
     _env:
-        - RUN: OS_MKSUDO_USER -- ${targetuser-}
+        - targetuser:
+            title: User to make sudo
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: User
+                    values:
+                        - user
+        - RUN: OS_MKSUDO_USER -- "${targetuser}"
 
 disableroot:
     _info:
@@ -90,15 +127,30 @@ disableuser:
         desc: |
             Disable a user from logging in.
     _env:
-        - RUN: OS_DISABLE_USER -- ${targetuserdisable-}
+        - targetuserdisable:
+            title: User to disable
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: User
+                    values:
+                        - user
+        - RUN: OS_DISABLE_USER -- "${targetuserdisable}"
 
 motd:
     _info:
         title: Create/replace motd file
     _env:
-        - motdfile: ${motdfile:-@{DIR}/motd}
-    _env:
-        - RUN: OS_MOTD -- ${motdfile}
+        - motdfile:
+            title: Path of motd file to set
+            value: ${motdfile:-@{DIR}/motd}
+            completion: G
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: motd file
+                    completion: G
+        - RUN: OS_MOTD -- "${motdfile}"
 
 update:
     _info:
@@ -122,9 +174,21 @@ service:
     _info:
         title: Control a service
     _env:
-        - service: ${service-}
-        - action: ${action-}
-        - RUN: OS_SERVICE ${service-} ${action-}
+        - service:
+            title: Name of service
+        - action:
+            title: Action
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: Service
+                    values:
+                        - service
+                -
+                    title: Action
+                    values:
+                        - action
+        - RUN: OS_SERVICE -- "${service}" "${action}"
 
 shell:
     _info:
@@ -135,7 +199,20 @@ shell:
             values:
                 - sh
                 - bash
-        - RUN: OS_SHELL ${shell-}
+        - command:
+            title: Command to run in shell
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: Shell
+                    values:
+                        - sh
+                        - bash
+                -
+                    title: Command
+                    values:
+                        - command
+        - RUN: OS_SHELL -- "${shell}" "${command}"
 
 install:
     _info:
@@ -144,6 +221,13 @@ install:
             Pkg name as positional argument.
             Always provide Debian names.
     _env:
-        - pkg: ${pkg-}
-        - RUN: OS_INSTALL_PKG ${pkg-}
+        - pkg:
+            title: Package
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: Package
+                    values:
+                        - package
+        - RUN: OS_INSTALL_PKG -- "${pkg}"
 ...

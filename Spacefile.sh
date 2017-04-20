@@ -143,7 +143,7 @@ OS_INFO()
 #=============
 OS_IS_INSTALLED()
 {
-    SPACE_SIGNATURE="program [pkg]"
+    SPACE_SIGNATURE="program:1 [pkg]"
     SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT OS_COMMAND"
     SPACE_ENV="SUDO=${SUDO-}"
 
@@ -334,7 +334,7 @@ _OS_PROGRAM_TRANSLATE()
 #================
 OS_INSTALL_PKG()
 {
-    SPACE_SIGNATURE="pkg"
+    SPACE_SIGNATURE="pkg:1"
     SPACE_DEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
     SPACE_ENV="SUDO=${SUDO-}"
 
@@ -557,7 +557,7 @@ OS_UPGRADE()
 #=======================
 OS_SERVICE()
 {
-    SPACE_SIGNATURE="service action"
+    SPACE_SIGNATURE="service:1 action:1"
     SPACE_DEP="PRINT OS_ID"
     SPACE_ENV="SUDO=${SUDO-}"
 
@@ -650,7 +650,7 @@ OS_REBOOT()
 #=======================
 OS_USER_EXIST()
 {
-    SPACE_SIGNATURE="user"
+    SPACE_SIGNATURE="user:1"
     SPACE_DEP="PRINT"
 
     # shellcheck disable=SC2039
@@ -688,7 +688,7 @@ OS_USER_EXIST()
 #=======================
 OS_GROUP_EXIST()
 {
-    SPACE_SIGNATURE="group"
+    SPACE_SIGNATURE="group:1"
     SPACE_DEP="PRINT FILE_GREP"
 
     # shellcheck disable=SC2039
@@ -732,7 +732,7 @@ OS_GROUP_EXIST()
 #=======================
 OS_CREATE_USER()
 {
-    SPACE_SIGNATURE="targetuser sshpubkeyfile"
+    SPACE_SIGNATURE="targetuser:1 sshpubkeyfile:1"
     SPACE_REDIR="<${2}"
     SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER"
     SPACE_ENV="SUDO=${SUDO-}"
@@ -794,7 +794,7 @@ OS_CREATE_USER()
 #=======================
 OS_ADD_USER()
 {
-    SPACE_SIGNATURE="user home [shell]"
+    SPACE_SIGNATURE="user:1 home:1 [shell]"
     SPACE_DEP="OS_COMMAND"
     SPACE_ENV="SUDO=${SUDO-}"
 
@@ -845,7 +845,7 @@ OS_ADD_USER()
 #===========
 OS_COMMAND()
 {
-    SPACE_SIGNATURE="command"
+    SPACE_SIGNATURE="command:1"
     SPACE_ENV="SUDO=${SUDO-}"
 
     local cmd="${1}"
@@ -890,7 +890,7 @@ OS_COMMAND()
 #=======================
 OS_MKSUDO_USER()
 {
-    SPACE_SIGNATURE="targetuser"
+    SPACE_SIGNATURE="targetuser:1"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
     SPACE_ENV="SUDO=${SUDO-}"
 
@@ -933,7 +933,7 @@ OS_MKSUDO_USER()
 #=======================
 OS_USER_ADD_GROUP()
 {
-    SPACE_SIGNATURE="targetuser group"
+    SPACE_SIGNATURE="targetuser:1 group:1"
     SPACE_ENV="SUDO=${SUDO-}"
     SPACE_DEP="OS_COMMAND PRINT"
 
@@ -967,7 +967,7 @@ OS_USER_ADD_GROUP()
 #=======================
 OS_MOTD()
 {
-    SPACE_SIGNATURE="motdfile"
+    SPACE_SIGNATURE="motdfile:1"
     # shellcheck disable=2034
     SPACE_REDIR="<${1}"
     SPACE_DEP="FILE_PIPE_WRITE PRINT"
@@ -1047,7 +1047,7 @@ OS_DISABLE_ROOT()
 #=======================
 OS_DISABLE_USER()
 {
-    SPACE_SIGNATURE="targetuser"
+    SPACE_SIGNATURE="targetuser:1"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
     SPACE_ENV="SUDO=${SUDO-}"
 
