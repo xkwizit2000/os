@@ -1111,7 +1111,7 @@ OS_SHELL()
     else
         PRINT "Exec command in shell: ${shell}." "debug"
         # shellcheck disable=2086
-        STRING_ESCAPE "cmd" '"$'
+        STRING_ESCAPE "cmd" '$'
         ${SUDO} ${shell} -c "${cmd}"
     fi
 }
