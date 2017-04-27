@@ -826,12 +826,16 @@ OS_ADD_USER()
     fi
 }
 
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
+
 #===========
 # OS_COMMAND
 #
-# Run 'command' to look for existance of command.
+# Run 'command' to look for existence of command.
 # If $SUDO set then will run in sudo shell, this is
-# useful because PATH might be diferent when running as sudo.
+# useful because PATH might be different when running as sudo.
 #
 # Parameters:
 #   $1: command to look for
