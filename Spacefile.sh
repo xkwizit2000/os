@@ -41,7 +41,6 @@ OS_DEP_INSTALL()
 OS_ID()
 {
     SPACE_DEP="OS_COMMAND"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     _OSTYPE="gnu"
     _OSHOME="/home"
@@ -145,7 +144,6 @@ OS_IS_INSTALLED()
 {
     SPACE_SIGNATURE="program:1 [pkg]"
     SPACE_DEP="OS_INSTALL_PKG _OS_PROGRAM_TRANSLATE PRINT OS_COMMAND"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local program="${1}"
     shift
@@ -336,7 +334,6 @@ OS_INSTALL_PKG()
 {
     SPACE_SIGNATURE="pkg:1"
     SPACE_DEP="OS_ID _OS_PKG_TRANSLATE OS_UPDATE PRINT"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local pkg="${1}"
     shift
@@ -357,45 +354,39 @@ OS_INSTALL_PKG()
         return 0
     fi
 
-    if [ "$(id -u)" -gt 0 ]; then
-        local SUDO="${SUDO-}"
-    else
-        local SUDO=
-    fi
-
-    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}. SUDO=${SUDO}" "info"
+    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}." "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
-        ${SUDO} apt-get -y install ${pkg}
+        apt-get -y install ${pkg}
         if [ "$?" -eq 100 ]; then
             OS_UPDATE
-            ${SUDO} apt-get -y install ${pkg}
+            apt-get -y install ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman -Syu --noconfirm ${pkg}
+        pacman -Syu --noconfirm ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} pacman -Syu --noconfirm ${pkg}
+            pacman -Syu --noconfirm ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "yum" ]; then
-        ${SUDO} yum -y install ${pkg}
+        yum -y install ${pkg}
     elif [ "${_OSPKGMGR}" = "apk" ]; then
-        ${SUDO} apk add ${pkg}
+        apk add ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} apk add ${pkg}
+            apk add ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "brew" ]; then
-        ${SUDO} brew install ${pkg}
+        brew install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} brew install ${pkg}
+            brew install ${pkg}
         fi
     elif [ "${_OSPKGMGR}" = "pkg" ]; then
-        ${SUDO} pkg install ${pkg}
+        pkg install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
-            ${SUDO} pkg install ${pkg}
+            pkg install ${pkg}
         fi
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
@@ -421,14 +412,10 @@ OS_INSTALL_PKG()
 #
 # Update the system package lists.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 #=======================
 OS_UPDATE()
 {
     SPACE_DEP="OS_ID PRINT"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local _OSTYPE=''
     local _OSPKGMGR=''
@@ -437,26 +424,20 @@ OS_UPDATE()
     local _OSINIT=''
     OS_ID
 
-    if [ "$(id -u)" -gt 0 ]; then
-        local SUDO="${SUDO-}"
-    else
-        local SUDO=
-    fi
-
     PRINT "Update package lists." "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
-        ${SUDO} apt-get update -y
+        apt-get update -y
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman --noconfirm -Sy
+        pacman --noconfirm -Sy
     elif [ "${_OSPKGMGR}" = "yum" ]; then
         :
     elif [ "${_OSPKGMGR}" = "apk" ]; then
-        ${SUDO} apk update
+        apk update
     elif [ "${_OSPKGMGR}" = "brew" ]; then
-        ${SUDO} brew update
+        brew update
     elif [ "${_OSPKGMGR}" = "pkg" ]; then
-        ${SUDO} pkg update
+        pkg update
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
         return 1
@@ -479,9 +460,6 @@ OS_UPDATE()
 #
 # Upgrade the system.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   Non-zero on error.
 #
@@ -489,7 +467,6 @@ OS_UPDATE()
 OS_UPGRADE()
 {
     SPACE_DEP="OS_ID OS_UPDATE PRINT"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     OS_UPDATE
     if [ "$?" -gt 0 ]; then
@@ -503,26 +480,20 @@ OS_UPGRADE()
     local _OSINIT=''
     OS_ID
 
-    if [ "$(id -u)" -gt 0 ]; then
-        local SUDO="${SUDO-}"
-    else
-        local SUDO=
-    fi
-
     PRINT "Upgrade OS..." "info"
 
     if [ "${_OSPKGMGR}" = "apt" ]; then
-        ${SUDO} apt-get -y upgrade
+        apt-get -y upgrade
     elif [ "${_OSPKGMGR}" = "pacman" ]; then
-        ${SUDO} pacman --noconfirm -Syu
+        pacman --noconfirm -Syu
     elif [ "${_OSPKGMGR}" = "yum" ]; then
-        ${SUDO} yum update -y
+        yum update -y
     elif [ "${_OSPKGMGR}" = "apk" ]; then
-        ${SUDO} apk upgrade
+        apk upgrade
     elif [ "${_OSPKGMGR}" = "brew" ]; then
-        ${SUDO} brew upgrade
+        brew upgrade
     elif [ "${_OSPKGMGR}" = "pkg" ]; then
-        ${SUDO} pkg upgrade
+        pkg upgrade
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
         return 1
@@ -547,9 +518,6 @@ OS_UPGRADE()
 #   $1: service name
 #   $2: action
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   0: success
 #   1: failure
@@ -559,7 +527,6 @@ OS_SERVICE()
 {
     SPACE_SIGNATURE="service:1 action:1"
     SPACE_DEP="PRINT OS_ID"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local service="${1}"
     shift
@@ -576,15 +543,14 @@ OS_SERVICE()
     local _OSINIT=''
     OS_ID
 
-    local SUDO="${SUDO-}"
     if [ "${_OSINIT}" = "systemd" ]; then
-        ${SUDO} systemctl "${action}" "${service}"
+        systemctl "${action}" "${service}"
     elif [ "${_OSINIT}" = "sysvinit" ]; then
-        ${SUDO} "/etc/init.d/${service}" "${action}"
+        "/etc/init.d/${service}" "${action}"
     elif [ "${_OSINIT}" = "launchd" ]; then
-        ${SUDO} launchctl "${action}" "${service}"
+        launchctl "${action}" "${service}"
     elif [ "${_OSINIT}" = "rc" ]; then
-        ${SUDO} "/etc/rc.d/${service}" "${action}"
+        "/etc/rc.d/${service}" "${action}"
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
         return 1
@@ -600,14 +566,10 @@ OS_SERVICE()
 #
 # Reboot the system.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 #=======================
 OS_REBOOT()
 {
     SPACE_DEP="PRINT OS_ID"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     PRINT "Reboot system now." "info"
 
@@ -618,13 +580,12 @@ OS_REBOOT()
     local _OSINIT=''
     OS_ID
 
-    local SUDO="${SUDO-}"
     if [ "${_OSINIT}" = "systemd" ]; then
-        ${SUDO} systemctl reboot
+        systemctl reboot
     elif [ "${_OSINIT}" = "sysvinit" ] \
       || [ "${_OSINIT}" = "launchd" ]  \
       || [ "${_OSINIT}" = "rc" ]; then
-        ${SUDO} reboot now
+        reboot now
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
         return 1
@@ -722,9 +683,6 @@ OS_GROUP_EXIST()
 #   $1: The name of the user to create.
 #   $2: Path of the pub key file to install for the user.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   0: success
 #   1: failure
@@ -735,7 +693,6 @@ OS_CREATE_USER()
     SPACE_SIGNATURE="targetuser:1 sshpubkeyfile:1"
     SPACE_REDIR="<${2}"
     SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -755,7 +712,6 @@ OS_CREATE_USER()
     local _OSINIT=''
     OS_ID
 
-    local SUDO="${SUDO-}"
     local home="${_OSHOME}/${targetuser}"
     OS_ADD_USER "${targetuser}" "${home}" &&
     FILE_CHMOD "700" "${home}" &&
@@ -796,7 +752,6 @@ OS_ADD_USER()
 {
     SPACE_SIGNATURE="user:1 home:1 [shell]"
     SPACE_DEP="OS_COMMAND"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -814,12 +769,10 @@ OS_ADD_USER()
         fi
     fi
 
-    local SUDO="${SUDO-}"
-
     if OS_COMMAND useradd >/dev/null; then
-        ${SUDO} useradd -m -d "${home}" -s "${shpath}" -U "${targetuser}"
+        useradd -m -d "${home}" -s "${shpath}" -U "${targetuser}"
     elif OS_COMMAND adduser >/dev/null; then
-        ${SUDO} adduser -D -h "${home}" -s "${shpath}" "${targetuser}"
+        adduser -D -h "${home}" -s "${shpath}" "${targetuser}"
     else
         PRINT "No useradd/adduser installed." "error"
         return 1
@@ -833,15 +786,8 @@ OS_ADD_USER()
 #===========
 # OS_COMMAND
 #
-# Run 'command' to look for existence of command.
-# If $SUDO set then will run in sudo shell, this is
-# useful because PATH might be different when running as sudo.
-#
 # Parameters:
 #   $1: command to look for
-#
-# Expects:
-#   $SUDO to be set if command will be run as sudo.
 #
 # Return:
 #   Same as 'command'
@@ -850,24 +796,11 @@ OS_ADD_USER()
 OS_COMMAND()
 {
     SPACE_SIGNATURE="command:1"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local cmd="${1}"
     shift
 
-    local shpath=
-    shpath="$(command -v sh)"
-    # shellcheck disable=2181
-    if [ "$?" -gt 0 ]; then
-        shpath="$(command -v bash)"
-    fi
-
-    local SUDO="${SUDO-}"
-    if [ -n "${SUDO}" ]; then
-        ${SUDO} ${shpath} -c "command -v ${cmd}" >/dev/null
-    else
-        command -v ${cmd} >/dev/null
-    fi
+    command -v ${cmd} >/dev/null
 }
 
 
@@ -884,9 +817,6 @@ OS_COMMAND()
 # Parameters:
 #   $1: The name of the user to make into sudo user.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   0: success
 #   1: failure
@@ -896,14 +826,12 @@ OS_MKSUDO_USER()
 {
     SPACE_SIGNATURE="targetuser:1"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_USER_ADD_GROUP OS_GROUP_EXIST"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
 
     PRINT "mksudo ${targetuser}." "info"
 
-    local SUDO="${SUDO-}"
     OS_GROUP_EXIST "sudo"
     if [ "$?" -eq 0 ]; then
         PRINT "Add user to sudo group." "debug"
@@ -938,7 +866,6 @@ OS_MKSUDO_USER()
 OS_USER_ADD_GROUP()
 {
     SPACE_SIGNATURE="targetuser:1 group:1"
-    SPACE_ENV="SUDO=${SUDO-}"
     SPACE_DEP="OS_COMMAND PRINT"
 
     local targetuser="${1}"
@@ -947,12 +874,11 @@ OS_USER_ADD_GROUP()
     local group="${1}"
     shift
 
-    local SUDO="${SUDO-}"
     if OS_COMMAND usermod >/dev/null; then
         PRINT "User usermod -Ag to add the user: '${targetuser}' to the group: '${group}'" "debug"
-        ${SUDO} usermod -aG "${group}" "${targetuser}"
+        usermod -aG "${group}" "${targetuser}"
     elif OS_COMMAND addgroup >/dev/null; then
-        ${SUDO} addgroup "${targetuser}" "${group}"
+        addgroup "${targetuser}" "${group}"
     else
         PRINT "Nor 'usermod' nor 'addgroup' found, can't add user to group." "error"
         return 1
@@ -994,9 +920,6 @@ OS_MOTD()
 #
 # Disable root from logging in both via ssh and physically.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   0: success
 #   1: failure
@@ -1005,7 +928,6 @@ OS_MOTD()
 OS_DISABLE_ROOT()
 {
     SPACE_DEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     PRINT "Inactivating root account." "info"
 
@@ -1014,9 +936,7 @@ OS_DISABLE_ROOT()
         return 1
     fi
 
-    # shellcheck disable=SC2039
-    local SUDO="${SUDO-}"
-    ${SUDO} passwd -d root &&
+    passwd -d root &&
     FILE_SED "s/^PermitRootLogin.*$/PermitRootLogin no/g" "/etc/ssh/sshd_config" &&
     FILE_ROW_PERSIST "PermitRootLogin no" "/etc/ssh/sshd_config" &&
     OS_SERVICE "sshd" "reload"
@@ -1041,9 +961,6 @@ OS_DISABLE_ROOT()
 # Parameters:
 #   $1: The name of the user to make inactive.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 # Returns:
 #   0: success
 #   1: failure
@@ -1053,7 +970,6 @@ OS_DISABLE_USER()
 {
     SPACE_SIGNATURE="targetuser:1"
     SPACE_DEP="PRINT FILE_ROW_PERSIST OS_SERVICE"
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local targetuser="${1}"
     shift
@@ -1065,8 +981,7 @@ OS_DISABLE_USER()
 
     PRINT "Inactivate user ${targetuser}." "info"
 
-    local SUDO="${SUDO-}"
-    ${SUDO} passwd -d "${targetuser}" &&
+    passwd -d "${targetuser}" &&
     FILE_ROW_PERSIST "DenyUsers ${targetuser}" "/etc/ssh/sshd_config" &&
     OS_SERVICE "sshd" "reload"
 
@@ -1089,9 +1004,6 @@ OS_DISABLE_USER()
 #   $1: shell name (optional).
 #   $@: optional commands to run in shell.
 #
-# Expects:
-#   $SUDO: if not run as root set `SUDO=sudo`
-#
 #============
 OS_SHELL()
 {
@@ -1099,24 +1011,21 @@ OS_SHELL()
     SPACE_SIGNATURE="[shell command]"
     # shellcheck disable=2034
     SPACE_DEP="PRINT STRING_ESCAPE"
-    # shellcheck disable=2034
-    SPACE_ENV="SUDO=${SUDO-}"
 
     local shell="${1:-sh}"
     shift $(( $# > 0 ? 1 : 0 ))
 
     local cmd="$@"
 
-    local SUDO="${SUDO-}"
     if [ -z "${cmd}" ]; then
         PRINT "Entering shell: ${shell}." "debug"
         # shellcheck disable=2086
-        ${SUDO} ${shell}
+        ${shell}
     else
         PRINT "Exec command in shell: ${shell}." "debug"
         # shellcheck disable=2086
         STRING_ESCAPE "cmd" '$'
-        ${SUDO} ${shell} -c "${cmd}"
+        ${shell} -c "${cmd}"
     fi
 }
 
