@@ -97,10 +97,10 @@ Check for dependencies
 Get the OS identification and package manager.  
   
 ### Expects:  
-- \_OSTYPE  
-- \_OSPKGMGR  
-- \_OSHOME - Users home dir.  
-- \_OSCWD - Current CWD.  
+- out\_ostype  
+- out\_ospkgmgr  
+- out\_oshome - Users home dir.  
+- out\_oscwd - Current CWD.  
   
   
   
@@ -181,9 +181,6 @@ it to the current package managers name for it.
   
 Update the system package lists.  
   
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
-  
   
   
 ## OS\_UPGRADE()  
@@ -191,9 +188,6 @@ Update the system package lists.
   
   
 Upgrade the system.  
-  
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - Non-zero on error.  
@@ -210,9 +204,6 @@ Control a service.
 - $1: service name  
 - $2: action  
   
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
-  
 ### Returns:  
 - 0: success  
 - 1: failure  
@@ -224,9 +215,6 @@ Control a service.
   
   
 Reboot the system.  
-  
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
   
   
   
@@ -270,9 +258,6 @@ Create passwordless user and install ssh key for it.
 - $1: The name of the user to create.  
 - $2: Path of the pub key file to install for the user.  
   
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
-  
 ### Returns:  
 - 0: success  
 - 1: failure  
@@ -300,15 +285,8 @@ Add a user, with a home directory.
   
   
   
-Run 'command' to look for existence of command.  
-If $SUDO set then will run in sudo shell, this is  
-useful because PATH might be different when running as sudo.  
-  
 ### Parameters:  
 - $1: command to look for  
-  
-### Expects:  
-- $SUDO to be set if command will be run as sudo.  
   
 - Return:  
 - Same as 'command'  
@@ -323,9 +301,6 @@ Make a user passwordless SUDO.
   
 ### Parameters:  
 - $1: The name of the user to make into sudo user.  
-  
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -366,9 +341,6 @@ $1: The path of the motd file to upload.
   
 Disable root from logging in both via ssh and physically.  
   
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
-  
 ### Returns:  
 - 0: success  
 - 1: failure  
@@ -383,9 +355,6 @@ Disable a user from logging in both via ssh and physically.
   
 ### Parameters:  
 - $1: The name of the user to make inactive.  
-  
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
   
 ### Returns:  
 - 0: success  
@@ -402,9 +371,6 @@ Enter userland shell.
 ### Parameters:  
 - $1: shell name (optional).  
 - $@: optional commands to run in shell.  
-  
-### Expects:  
-- $SUDO: if not run as root set `SUDOsudo`  
   
   
   
