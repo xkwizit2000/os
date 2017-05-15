@@ -32,61 +32,61 @@ OS_DEP_INSTALL()
 # Get the OS identification and package manager.
 #
 # Expects:
-#   _OSTYPE
-#   _OSPKGMGR
-#   _OSHOME - Users home dir.
-#   _OSCWD - Current CWD.
+#   out_ostype
+#   out_ospkgmgr
+#   out_oshome - Users home dir.
+#   out_oscwd - Current CWD.
 #
 #================
 OS_ID()
 {
     SPACE_DEP="OS_COMMAND"
 
-    _OSTYPE="gnu"
-    _OSHOME="/home"
-    _OSCWD="$(pwd)"
-    _OSPKGMGR=
-    _OSINIT="sysvinit"
+    out_ostype="gnu"
+    out_oshome="/home"
+    out_oscwd="$(pwd)"
+    out_ospkgmgr=
+    out_osinit="sysvinit"
 
     if OS_COMMAND "systemctl" >/dev/null; then
-        _OSINIT="systemd"
+        out_osinit="systemd"
     fi
 
-    if [ "${_OSCWD}" = "/" ]; then
+    if [ "${out_oscwd}" = "/" ]; then
         # We'll conform the root directory to not end with slash,
         # since other directories do not end with slash.
-        _OSCWD="/."
+        out_oscwd="/."
     fi
 
-    [ -f "/etc/debian_version" ] && _OSPKGMGR="apt"
-    [ -f "/etc/arch-release" ] && _OSPKGMGR="pacman"
-    [ -d "/etc/yum" ] && _OSPKGMGR="yum"
-    [ -f "/etc/redhat-release" ] && _OSPKGMGR="yum"
-    [ -f "/etc/alpine-release" ] && { _OSPKGMGR="apk"; _OSTYPE="busybox"; }
+    [ -f "/etc/debian_version" ] && out_ospkgmgr="apt"
+    [ -f "/etc/arch-release" ] && out_ospkgmgr="pacman"
+    [ -d "/etc/yum" ] && out_ospkgmgr="yum"
+    [ -f "/etc/redhat-release" ] && out_ospkgmgr="yum"
+    [ -f "/etc/alpine-release" ] && { out_ospkgmgr="apk"; out_ostype="busybox"; }
 
     # Some releases are more tricky.
-    if [ "${_OSPKGMGR}" = "" ]; then
+    if [ "${out_ospkgmgr}" = "" ]; then
         if OS_COMMAND "apt-get" >/dev/null; then
-            _OSPKGMGR="apt"
+            out_ospkgmgr="apt"
         elif OS_COMMAND "pacman" >/dev/null; then
-            _OSPKGMGR="pacman"
+            out_ospkgmgr="pacman"
         elif OS_COMMAND "yum" >/dev/null; then
-            _OSPKGMGR="yum"
+            out_ospkgmgr="yum"
         elif OS_COMMAND "apk" >/dev/null; then
-            _OSPKGMGR="apk"
+            out_ospkgmgr="apk"
             # We assume Alpine Linux runs on BusyBox.
             # We could have a more fine grained check,
             # but we would have to execute 'ls' a couple of times to do that.
-            _OSTYPE="busybox"
+            out_ostype="busybox"
         elif OS_COMMAND "brew" >/dev/null; then
-            _OSPKGMGR="brew"
-            _OSTYPE="darwin"
-            _OSHOME="/Users"
-            _OSINIT="launchd"
+            out_ospkgmgr="brew"
+            out_ostype="darwin"
+            out_oshome="/Users"
+            out_osinit="launchd"
         elif OS_COMMAND "pkg" >/dev/null; then
-            _OSPKGMGR="pkg"
-            _OSTYPE="FreeBSD"
-            _OSINIT="rc"
+            out_ospkgmgr="pkg"
+            out_ostype="FreeBSD"
+            out_osinit="rc"
         fi
     fi
 
@@ -107,18 +107,18 @@ OS_INFO()
 {
     SPACE_DEP="OS_ID PRINT"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
-    PRINT "OS type: ${_OSTYPE}."
-    PRINT "OS init system: ${_OSINIT}."
-    PRINT "OS package manager: ${_OSPKGMGR}."
-    PRINT "OS home directory: ${_OSHOME}."
-    PRINT "Current directory: ${_OSCWD}."
+    PRINT "OS type: ${out_ostype}."
+    PRINT "OS init system: ${out_osinit}."
+    PRINT "OS package manager: ${out_ospkgmgr}."
+    PRINT "OS home directory: ${out_oshome}."
+    PRINT "Current directory: ${out_oscwd}."
 }
 
 
@@ -153,11 +153,11 @@ OS_IS_INSTALLED()
 
     local program2="${program}"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     _OS_PROGRAM_TRANSLATE
@@ -196,11 +196,11 @@ OS_IS_INSTALLED()
 #================
 _OS_PKG_TRANSLATE()
 {
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     local pkg2="${pkg}"
@@ -209,7 +209,7 @@ _OS_PKG_TRANSLATE()
     for p in ${pkg2}; do
         # This function should be further added to
         # to handle more packages.
-        if [ "${_OSPKGMGR}" = "apk" ]; then
+        if [ "${out_ospkgmgr}" = "apk" ]; then
             if [ "${p}" = "openssh-server" ]; then
                 p="openssh"
             elif [ "${p}" = "openssh-client" ]; then
@@ -221,7 +221,7 @@ _OS_PKG_TRANSLATE()
             elif [ "${p}" = "libncurses-dev" ]; then
                 p="ncurses-dev"
             fi
-        elif [ "${_OSPKGMGR}" = "yum" ]; then
+        elif [ "${out_ospkgmgr}" = "yum" ]; then
             if [ "${p}" = "coreutils" ]; then
                 p="xtra-utils"
             #elif [ "${p}" = "lua5.1" ]; then
@@ -239,7 +239,7 @@ _OS_PKG_TRANSLATE()
             elif [ "${p}" = "libncurses-dev" ]; then
                 p="ncurses-devel"
             fi
-        elif [ "${_OSPKGMGR}" = "pacman" ]; then
+        elif [ "${out_ospkgmgr}" = "pacman" ]; then
             if [ "${p}" = "lua5.1" ]; then
                 p="lua51"
             elif [ "${p}" = "lua5.2" ]; then
@@ -285,22 +285,22 @@ _OS_PKG_TRANSLATE()
 #================
 _OS_PROGRAM_TRANSLATE()
 {
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     # This function should be further added to
     # to handle more programs.
-    if [ "${_OSPKGMGR}" = "apk" ]; then
+    if [ "${out_ospkgmgr}" = "apk" ]; then
         :
-    elif [ "${_OSPKGMGR}" = "yum" ]; then
+    elif [ "${out_ospkgmgr}" = "yum" ]; then
         if [ "${program}" = "lua5.1" ]; then
             program="lua"
         fi
-    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+    elif [ "${out_ospkgmgr}" = "pacman" ]; then
         :
     fi
 }
@@ -340,49 +340,49 @@ OS_INSTALL_PKG()
 
     PRINT "Install pkg(s) (untranslated): ${pkg}." "debug"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     _OS_PKG_TRANSLATE
 
     if [ "${pkg}" = "" ]; then
-        PRINT "Package has no target for pkg mgr: ${_OSPKGMGR}."
+        PRINT "Package has no target for pkg mgr: ${out_ospkgmgr}."
         return 0
     fi
 
-    PRINT "Install package(s) using ${_OSPKGMGR}: ${pkg}." "info"
+    PRINT "Install package(s) using ${out_ospkgmgr}: ${pkg}." "info"
 
-    if [ "${_OSPKGMGR}" = "apt" ]; then
+    if [ "${out_ospkgmgr}" = "apt" ]; then
         apt-get -y install ${pkg}
         if [ "$?" -eq 100 ]; then
             OS_UPDATE
             apt-get -y install ${pkg}
         fi
-    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+    elif [ "${out_ospkgmgr}" = "pacman" ]; then
         pacman -Syu --noconfirm ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
             pacman -Syu --noconfirm ${pkg}
         fi
-    elif [ "${_OSPKGMGR}" = "yum" ]; then
+    elif [ "${out_ospkgmgr}" = "yum" ]; then
         yum -y install ${pkg}
-    elif [ "${_OSPKGMGR}" = "apk" ]; then
+    elif [ "${out_ospkgmgr}" = "apk" ]; then
         apk add ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
             apk add ${pkg}
         fi
-    elif [ "${_OSPKGMGR}" = "brew" ]; then
+    elif [ "${out_ospkgmgr}" = "brew" ]; then
         brew install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
             brew install ${pkg}
         fi
-    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+    elif [ "${out_ospkgmgr}" = "pkg" ]; then
         pkg install ${pkg}
         if [ "$?" -gt 0 ]; then
             OS_UPDATE
@@ -417,26 +417,26 @@ OS_UPDATE()
 {
     SPACE_DEP="OS_ID PRINT"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     PRINT "Update package lists." "info"
 
-    if [ "${_OSPKGMGR}" = "apt" ]; then
+    if [ "${out_ospkgmgr}" = "apt" ]; then
         apt-get update -y
-    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+    elif [ "${out_ospkgmgr}" = "pacman" ]; then
         pacman --noconfirm -Sy
-    elif [ "${_OSPKGMGR}" = "yum" ]; then
+    elif [ "${out_ospkgmgr}" = "yum" ]; then
         :
-    elif [ "${_OSPKGMGR}" = "apk" ]; then
+    elif [ "${out_ospkgmgr}" = "apk" ]; then
         apk update
-    elif [ "${_OSPKGMGR}" = "brew" ]; then
+    elif [ "${out_ospkgmgr}" = "brew" ]; then
         brew update
-    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+    elif [ "${out_ospkgmgr}" = "pkg" ]; then
         pkg update
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
@@ -473,26 +473,26 @@ OS_UPGRADE()
         return 1
     fi
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
     PRINT "Upgrade OS..." "info"
 
-    if [ "${_OSPKGMGR}" = "apt" ]; then
+    if [ "${out_ospkgmgr}" = "apt" ]; then
         apt-get -y upgrade
-    elif [ "${_OSPKGMGR}" = "pacman" ]; then
+    elif [ "${out_ospkgmgr}" = "pacman" ]; then
         pacman --noconfirm -Syu
-    elif [ "${_OSPKGMGR}" = "yum" ]; then
+    elif [ "${out_ospkgmgr}" = "yum" ]; then
         yum update -y
-    elif [ "${_OSPKGMGR}" = "apk" ]; then
+    elif [ "${out_ospkgmgr}" = "apk" ]; then
         apk upgrade
-    elif [ "${_OSPKGMGR}" = "brew" ]; then
+    elif [ "${out_ospkgmgr}" = "brew" ]; then
         brew upgrade
-    elif [ "${_OSPKGMGR}" = "pkg" ]; then
+    elif [ "${out_ospkgmgr}" = "pkg" ]; then
         pkg upgrade
     else
         PRINT "Could not determine what package manager is being used in the OS." "error"
@@ -536,20 +536,20 @@ OS_SERVICE()
 
     PRINT "Service ${service}, ${action}." "info"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
-    if [ "${_OSINIT}" = "systemd" ]; then
+    if [ "${out_osinit}" = "systemd" ]; then
         systemctl "${action}" "${service}"
-    elif [ "${_OSINIT}" = "sysvinit" ]; then
+    elif [ "${out_osinit}" = "sysvinit" ]; then
         "/etc/init.d/${service}" "${action}"
-    elif [ "${_OSINIT}" = "launchd" ]; then
+    elif [ "${out_osinit}" = "launchd" ]; then
         launchctl "${action}" "${service}"
-    elif [ "${_OSINIT}" = "rc" ]; then
+    elif [ "${out_osinit}" = "rc" ]; then
         "/etc/rc.d/${service}" "${action}"
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
@@ -573,18 +573,18 @@ OS_REBOOT()
 
     PRINT "Reboot system now." "info"
 
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
-    if [ "${_OSINIT}" = "systemd" ]; then
+    if [ "${out_osinit}" = "systemd" ]; then
         systemctl reboot
-    elif [ "${_OSINIT}" = "sysvinit" ] \
-      || [ "${_OSINIT}" = "launchd" ]  \
-      || [ "${_OSINIT}" = "rc" ]; then
+    elif [ "${out_osinit}" = "sysvinit" ] \
+      || [ "${out_osinit}" = "launchd" ]  \
+      || [ "${out_osinit}" = "rc" ]; then
         reboot now
     else
         PRINT "Could not determine what init service is being used in the OS." "error"
@@ -705,14 +705,14 @@ OS_CREATE_USER()
     PRINT "Create ${targetuser}." "debug"
 
     # shellcheck disable=2034
-    local _OSTYPE=''
-    local _OSPKGMGR=''
-    local _OSHOME=''
-    local _OSCWD=''
-    local _OSINIT=''
+    local out_ostype=''
+    local out_ospkgmgr=''
+    local out_oshome=''
+    local out_oscwd=''
+    local out_osinit=''
     OS_ID
 
-    local home="${_OSHOME}/${targetuser}"
+    local home="${out_oshome}/${targetuser}"
     OS_ADD_USER "${targetuser}" "${home}" &&
     FILE_CHMOD "700" "${home}" &&
     FILE_MKDIRP "${home}/.ssh" &&
