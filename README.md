@@ -374,3 +374,18 @@ Enter userland shell.
   
   
   
+## OS\_KILL\_ALL()  
+  
+  
+  
+Kill all descendant processes to given PID.  
+  
+### Parameters:  
+- $1: PID to kill descendants for  
+- $2: Include PID it self, default 1.  
+  
+### Returns:  
+- non-zero on error  
+  
+  
+  
