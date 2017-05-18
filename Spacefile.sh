@@ -1037,3 +1037,62 @@ OS_HARDEN()
     PRINT "Pending implementation..." "warning"
     return 0
 }
+
+#============
+# OS_KILL_ALL
+#
+# Kill all descendant processes to given PID.
+#
+# Parameters:
+# $1: PID to kill descendants for
+# $2: Include PID it self, default 1.
+#
+# Returns:
+#   non-zero on error
+#
+#============
+OS_KILL_ALL()
+{
+    SPACE_SIGNATURE="PID [inclusive]"
+
+    local toppid="${1}"
+    shift
+
+    local inclusive="${1-1}"
+    shift $(($# > 0 ? 1 : 0))
+
+    local pids="${toppid}"
+    local allpids=""
+    local pid=
+
+    while true; do
+        local newpids=
+        for pid in ${pids}; do
+            local pids2=
+            pids2=$(ps -ef | awk '$3 == '${pid}' { print $2 }' 2>/dev/null)
+            if [ "$?" -gt 0 ]; then
+                # Note: Dash will always return with error code here, but still it worked,
+                # so we check if $pids2 contains anything instead of relying on error code.
+                :
+            fi
+            if [ -n "${pids2}" ]; then
+                newpids="${newpids} ${pids2}"
+            fi
+        done
+        if [ -z "${newpids}" ]; then
+            break
+        fi
+        allpids="${newpids} ${allpids}"
+        pids="${newpids}"
+    done
+
+    if [ "${inclusive}" = 1 ]; then
+        allpids="${allpids} ${toppid}"
+    fi
+
+    for pid in ${allpids}; do
+        kill -9 "${pid}" 2>/dev/null
+    done
+
+    return 0
+}
