@@ -1038,6 +1038,10 @@ OS_HARDEN()
     return 0
 }
 
+
+# Disable warning about local keyword
+# shellcheck disable=SC2039
+
 #============
 # OS_KILL_ALL
 #
