@@ -1,5 +1,14 @@
 # Space Module change log - os
 
+## [1.1.0 - 2017-05-19]
+
++ Add `OS_KILL_ALL`
+
+* Rename expected local OUT variables
+
+- Remove old `SUDO` behavior
+
+
 ## [1.0.1 - 2017-04-26]
 
 * Update auto completion
