@@ -2,6 +2,7 @@
 modulename: OS
 title: /shell/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/shell.md
 weight: 200
 ---
 # OS module: Shell

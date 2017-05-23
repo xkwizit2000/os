@@ -2,6 +2,7 @@
 modulename: OS
 title: /disableuser/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/disableuser.md
 weight: 200
 ---
 # OS module: Disable user

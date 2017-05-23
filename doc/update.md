@@ -2,6 +2,7 @@
 modulename: OS
 title: /update/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/update.md
 weight: 200
 ---
 # OS module: Update

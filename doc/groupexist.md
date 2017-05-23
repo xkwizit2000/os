@@ -2,6 +2,7 @@
 modulename: OS
 title: /groupexist/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/groupexist.md
 weight: 200
 ---
 # OS module: Group exist

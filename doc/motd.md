@@ -2,6 +2,7 @@
 modulename: OS
 title: /motd/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/motd.md
 weight: 200
 ---
 # OS module: Message of the day

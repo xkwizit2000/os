@@ -2,6 +2,7 @@
 modulename: OS
 title: /userexist/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/userexist.md
 weight: 200
 ---
 # OS module: User exist

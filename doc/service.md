@@ -2,6 +2,7 @@
 modulename: OS
 title: /service/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/service.md
 weight: 200
 ---
 # OS module: Service

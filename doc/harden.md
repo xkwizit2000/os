@@ -2,6 +2,7 @@
 modulename: OS
 title: /harden/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/harden.md
 weight: 200
 ---
 # OS module: Harden

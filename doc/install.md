@@ -2,6 +2,7 @@
 modulename: OS
 title: /install/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/install.md
 weight: 200
 ---
 # OS module: Install

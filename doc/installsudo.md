@@ -2,6 +2,7 @@
 modulename: OS
 title: /installsudo/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/installsudo.md
 weight: 200
 ---
 # OS module: Install sudo

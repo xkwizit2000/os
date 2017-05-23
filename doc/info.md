@@ -2,6 +2,7 @@
 modulename: OS
 title: /info/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/info.md
 weight: 200
 ---
 # OS module: Info

@@ -2,6 +2,7 @@
 modulename: OS
 title: /mksudo/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/mksudo.md
 weight: 200
 ---
 # OS module: Make sudo

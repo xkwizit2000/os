@@ -2,6 +2,7 @@
 modulename: OS
 title: /createuser/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/createuser.md
 weight: 200
 ---
 # OS module: Create user

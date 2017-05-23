@@ -2,6 +2,7 @@
 modulename: OS
 title: /reboot/
 giturl: gitlab.com/space-sh/os
+editurl: /edit/master/doc/reboot.md
 weight: 200
 ---
 # OS module: Reboot
