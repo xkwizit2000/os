@@ -1057,6 +1057,7 @@ OS_HARDEN()
 #============
 OS_KILL_ALL()
 {
+    # shellcheck disable=2034
     SPACE_SIGNATURE="PID [inclusive]"
 
     local toppid="${1}"
