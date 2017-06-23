@@ -1041,6 +1041,8 @@ OS_HARDEN()
 
 # Disable warning about local keyword
 # shellcheck disable=SC2039
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #============
 # OS_KILL_ALL
