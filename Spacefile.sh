@@ -611,7 +611,7 @@ OS_REBOOT()
 #=======================
 OS_USER_EXIST()
 {
-    SPACE_SIGNATURE="user:1"
+    SPACE_SIGNATURE="targetuser:1"
     SPACE_DEP="PRINT"
 
     # shellcheck disable=SC2039
@@ -658,7 +658,7 @@ OS_GROUP_EXIST()
 
     PRINT "Check if group ${group} exists." "debug"
 
-    FILE_GREP "^${group}.*\$" "/etc/group" "1" "ge" >/dev/null
+    FILE_GREP "^${group}:.*\$" "/etc/group" "1" "ge" >/dev/null
     if [ "$?" -eq 0 ]; then
         PRINT "Group does exist." "debug"
         return 0
