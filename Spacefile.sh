@@ -998,7 +998,7 @@ OS_DISABLE_USER()
 #============
 # OS_SHELL
 #
-# Enter userland shell.
+# Enter userland shell or exec command.
 #
 # Parameters:
 #   $1: shell name (optional).
@@ -1010,7 +1010,7 @@ OS_SHELL()
     # shellcheck disable=2034
     SPACE_SIGNATURE="[shell command]"
     # shellcheck disable=2034
-    SPACE_DEP="PRINT STRING_ESCAPE"
+    SPACE_DEP="PRINT STRING_ESCAPE OS_KILL_ALL"
 
     local shell="${1:-sh}"
     shift $(( $# > 0 ? 1 : 0 ))
@@ -1025,7 +1025,36 @@ OS_SHELL()
         PRINT "Exec command in shell: ${shell}." "debug"
         # shellcheck disable=2086
         STRING_ESCAPE "cmd" '$'
-        ${shell} -c "${cmd}"
+        # Detect if we are running as different user than grandpa, that would indicate 'su' usage.
+        # In such case we need to detect when grandpa dies because it is running in a separate
+        # session and that could leave this running as a zombie after users ctrl-c's it.
+        local ppid=
+        ppid=$(ps -p $$ -o ppid=)
+        ppid=$(ps -p $ppid -o ppid=)
+        local puid=
+        puid=$(ps -p $ppid -o uid=)
+        local uid=
+        uid=$(ps -p $$ -o uid=)
+        if [ "${uid}" = "${puid}" ]; then
+            ${shell} -c "${cmd}"
+        else
+            PRINT "Spy on grandparent dying: uid $uid, grandpa uid $puid" "debug"
+            ${shell} -c "${cmd}" &
+            local pids="$! $ppid"
+            local pid=
+            local pid2=
+            while true; do
+                for pid in ${pids}; do
+                    pid2=$(ps -p $pid -o pid=)
+                    if [ -z "${pid2}" ]; then
+                        PRINT "Grandpa or command died, kill all involved." "debug"
+                        OS_KILL_ALL "$$"
+                        break
+                    fi
+                done
+                sleep 3
+            done
+        fi
     fi
 }
 
