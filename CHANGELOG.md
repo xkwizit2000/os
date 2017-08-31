@@ -1,5 +1,16 @@
 # Space Module change log - os
 
+## [1.1.2 - 2017-08-28]
+
+* Fix a bug in grep regular expression for `group_exist` operation
+
+* Rename signature variable in `user_exist` operation
+
+- Disable static analysis warning about unused variables
+
+- Disable static analysis warning about indirectly checking status code
+
+
 ## [1.1.1 - 2017-06-11]
 
 * Update documentation
