@@ -230,4 +230,20 @@ install:
                     values:
                         - package
         - RUN: OS_INSTALL_PKG -- "${pkg}"
+
+security:
+    limits:
+        set:
+            _info:
+                title: Update /etc/security/limits.conf
+            _env:
+                - domain:
+                - type:
+                - item:
+                - value:
+                - RUN: OS_SECURITY_LIMITS_SET -- "${domain}" "${type}" "${item}" "${value}"
+
+
+
+
 ...

@@ -1132,3 +1132,27 @@ OS_KILL_ALL()
 
     return 0
 }
+
+OS_SECURITY_LIMITS_SET()
+{
+    SPACE_SIGNATURE="domain type item value"
+    SPACE_DEP="FILE_SED FILE_APPEND_ROW"
+
+    local domain="${1}"
+    shift
+
+    local type="${1}"
+    shift
+
+    local item="${1}"
+    shift
+
+    local value="${1}"
+    shift
+
+    local file="/etc/security/limits.conf"
+
+    # First remove an existing line
+    FILE_SED "/^.\+ $type[ ]\+$item .*/d" "${file}" &&
+    FILE_APPEND_ROW "${domain} ${type} ${item} ${value}" "${file}"
+}
