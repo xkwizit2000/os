@@ -1028,8 +1028,14 @@ OS_SHELL()
         # Detect if we are running as different user than grandpa, that would indicate 'su' usage.
         # In such case we need to detect when grandpa dies because it is running in a separate
         # session and that could leave this running as a zombie after users ctrl-c's it.
+        # However, if running in busybox, we cannot do this.
+
         local ppid=
-        ppid=$(ps -p $$ -o ppid=)
+        ppid=$(ps -p $$ -o ppid= 2>/dev/null)
+        if [ "$?" -gt 0 ]; then
+            ${shell} -c "${cmd}"
+            return
+        fi
         ppid=$(ps -p $ppid -o ppid=)
         local puid=
         puid=$(ps -p $ppid -o uid=)
