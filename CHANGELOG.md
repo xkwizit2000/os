@@ -1,5 +1,14 @@
 # Space Module change log - os
 
+## [current]
+
++ Add `/security/limits/set/`
+
++ Add a check for busybox shell
+
+* Expand `OS_SHELL` to gracefully kill processes when running as `su`
+
+
 ## [1.1.2 - 2017-08-28]
 
 * Fix a bug in grep regular expression for `group_exist` operation
