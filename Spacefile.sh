@@ -1139,6 +1139,18 @@ OS_KILL_ALL()
     return 0
 }
 
+#============
+# OS_SECURITY_LIMITS_SET
+#
+# Configure resource limits
+#
+# Parameters:
+#   $1: domain name (username or groupname, for instance)
+#   $2: type of resource limit (soft or hard)
+#   $3: resource item name
+#   $4: value to attribute to resource item
+#
+#============
 OS_SECURITY_LIMITS_SET()
 {
     SPACE_SIGNATURE="domain type item value"
