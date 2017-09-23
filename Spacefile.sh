@@ -1153,7 +1153,9 @@ OS_KILL_ALL()
 #============
 OS_SECURITY_LIMITS_SET()
 {
+    # shellcheck disable=2034
     SPACE_SIGNATURE="domain type item value"
+    # shellcheck disable=2034
     SPACE_DEP="FILE_SED FILE_APPEND_ROW"
 
     local domain="${1}"
