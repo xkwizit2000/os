@@ -1,6 +1,6 @@
 # Space Module change log - os
 
-## [current]
+## [1.2.0 - 2017-09-24]
 
 + Add `/security/limits/set/`
 
