@@ -8,6 +8,10 @@
 
 * Expand `OS_SHELL` to gracefully kill processes when running as `su`
 
+* Update in-code comments
+
+- Disable false positive static analysis warnings
+
 
 ## [1.1.2 - 2017-08-28]
 
