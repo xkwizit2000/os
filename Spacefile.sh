@@ -994,6 +994,8 @@ OS_DISABLE_USER()
 
 # Disable warning about local keyword
 # shellcheck disable=SC2039
+# Disable warning about indirectly checking status code
+# shellcheck disable=SC2181
 
 #============
 # OS_SHELL
