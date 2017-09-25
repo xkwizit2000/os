@@ -60,6 +60,11 @@ Handle operating system tasks such as user management, packages and services man
 	Reboot the system
 
 
+## /security/
+	
+
++ limits
+
 ## /service/
 	Control a service
 
@@ -366,7 +371,7 @@ Disable a user from logging in both via ssh and physically.
   
   
   
-Enter userland shell.  
+Enter userland shell or exec command.  
   
 ### Parameters:  
 - $1: shell name (optional).  
@@ -386,6 +391,20 @@ Kill all descendant processes to given PID.
   
 ### Returns:  
 - non-zero on error  
+  
+  
+  
+## OS\_SECURITY\_LIMITS\_SET()  
+  
+  
+  
+Configure resource limits  
+  
+### Parameters:  
+- $1: domain name (username or groupname, for instance)  
+- $2: type of resource limit (soft or hard)  
+- $3: resource item name  
+- $4: value to attribute to resource item  
   
   
   
