@@ -779,6 +779,35 @@ OS_ADD_USER()
     fi
 }
 
+#=======================
+# OS_ADD_GROUP
+#
+# Add a group to the system
+#
+# Parameters:
+#   $1: group name
+#
+# Returns:
+#   0: success
+#   1: failed to call groupadd
+#
+#=======================
+OS_ADD_GROUP()
+{
+    SPACE_SIGNATURE="group"
+    SPACE_DEP="OS_COMMAND"
+
+    local group="${1}"
+    shift
+
+    if OS_COMMAND groupadd >/dev/null; then
+        groupadd "${group}"
+    else
+        PRINT "No groupadd installed." "error"
+        return 1
+    fi
+}
+
 
 # Disable warning about local keyword
 # shellcheck disable=SC2039

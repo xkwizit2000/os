@@ -97,6 +97,20 @@ createuser:
                     completion: G
         - RUN: OS_CREATE_USER -- "${targetuser}" "${targetuserpubkeyfile}"
 
+creategroup:
+    _info:
+        title: Create a group in the system
+    _env:
+        - group:
+            title: Group name
+        - SPACE_ARGS:
+            arguments:
+                -
+                    title: Group
+                    values:
+                        - group
+        - RUN: OS_ADD_GROUP
+
 mksudo:
     _info:
         title: Make an existing user into sudo
