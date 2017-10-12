@@ -962,10 +962,10 @@ OS_DISABLE_ROOT()
 
     PRINT "Inactivating root account." "info"
 
-    if [ "$(id -u)" -eq 0 ]; then
-        PRINT "Do not run this as root." "error"
-        return 1
-    fi
+    #if [ "$(id -u)" -eq 0 ]; then
+        #PRINT "Do not run this as root." "error"
+        #return 1
+    #fi
 
     passwd -d root &&
     FILE_SED "s/^PermitRootLogin.*$/PermitRootLogin no/g" "/etc/ssh/sshd_config" &&
@@ -1005,10 +1005,10 @@ OS_DISABLE_USER()
     local targetuser="${1}"
     shift
 
-    if [ "$(whoami)" = "${targetuser}" ]; then
-        PRINT "This is you! Sawing of the branch you're sitting on?" "error"
-        return 1
-    fi
+    #if [ "$(whoami)" = "${targetuser}" ]; then
+        #PRINT "This is you! Sawing of the branch you're sitting on?" "error"
+        #return 1
+    #fi
 
     PRINT "Inactivate user ${targetuser}." "info"
 
