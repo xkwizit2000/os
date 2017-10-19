@@ -1,5 +1,14 @@
 # Space Module change log - os
 
+## [1.3.0 - 2017-10-19]
+
++ Add `ADD_GROUP` function
+
++ Add `creategroup` node
+
++ Add a check against target user in  `CREATE_USER` function
+
+
 ## [1.2.0 - 2017-09-24]
 
 + Add `/security/limits/set/`
