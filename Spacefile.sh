@@ -692,7 +692,7 @@ OS_CREATE_USER()
 {
     SPACE_SIGNATURE="targetuser:1 sshpubkeyfile:1"
     SPACE_REDIR="<${2}"
-    SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_WRITE FILE_CHOWNR OS_ID OS_ADD_USER OS_USER_EXIST"
+    SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_APPEND FILE_CHOWNR OS_ID OS_ADD_USER OS_USER_EXIST"
 
     local targetuser="${1}"
     shift
@@ -719,7 +719,7 @@ OS_CREATE_USER()
     FILE_CHMOD "700" "${home}" &&
     FILE_MKDIRP "${home}/.ssh" &&
     FILE_CHMOD "700" "${home}/.ssh" &&
-    FILE_PIPE_WRITE "${home}/.ssh/authorized_keys" &&
+    FILE_PIPE_APPEND "${home}/.ssh/authorized_keys" &&
     FILE_CHMOD "600" "${home}/.ssh/authorized_keys" &&
     FILE_CHOWNR "${targetuser}:${targetuser}" "${home}"
 
