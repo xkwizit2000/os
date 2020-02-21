@@ -1,5 +1,10 @@
 # Space Module change log - os
 
+## [1.3.2 - 2020-02-21]
+
+* Update documentation
+
+
 ## [1.3.1 - 2020-02-18]
 
 * Change file write operation to append when adding to `authorized_keys` in `OS_CREATE_USER`
