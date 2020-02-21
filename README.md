@@ -1,7 +1,11 @@
-# OS module | [![build status](https://gitlab.com/space-sh/os/badges/master/build.svg)](https://gitlab.com/space-sh/os/commits/master)
+# OS module | [![build status](https://gitlab.com/space-sh/os/badges/master/pipeline.svg)](https://gitlab.com/space-sh/os/commits/master)
 
 Handle operating system tasks such as user management, packages and services management.
 
+
+
+## /creategroup/
+	Create a group in the system
 
 
 ## /createuser/
@@ -283,6 +287,21 @@ Add a user, with a home directory.
 ### Returns:  
 - 0: success  
 - 1: failed to call useradd/adduser  
+  
+  
+  
+## OS\_ADD\_GROUP()  
+  
+  
+  
+Add a group to the system  
+  
+### Parameters:  
+- $1: group name  
+  
+### Returns:  
+- 0: success  
+- 1: failed to call groupadd  
   
   
   
