@@ -1,5 +1,14 @@
 # Space Module change log - os
 
+## [1.3.3 - 2021-01-19]
+
+* Change `_OS_CREATE_USER` function to never add ssh pub key more than once
+
+* Limit `chown -r` to _.ssh_ directory
+
+* Change log output to debug level
+
+
 ## [1.3.2 - 2020-02-21]
 
 * Update documentation
