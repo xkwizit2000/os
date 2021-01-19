@@ -681,7 +681,7 @@ OS_GROUP_EXIST()
 #
 # Parameters:
 #   $1: The name of the user to create.
-#   $2: Path of the pub key file to install for the user.
+#   $2: Path of the pub key file to install for the user. The contents will be passed over stdin.
 #
 # Returns:
 #   0: success
@@ -690,16 +690,23 @@ OS_GROUP_EXIST()
 #=======================
 OS_CREATE_USER()
 {
-    SPACE_SIGNATURE="targetuser:1 sshpubkeyfile:1"
+    SPACE_SIGNATURE="targetuser sshpubkeyfile"
     SPACE_REDIR="<${2}"
-    SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_PIPE_APPEND FILE_CHOWNR OS_ID OS_ADD_USER OS_USER_EXIST"
+    SPACE_DEP="_OS_CREATE_USER"
 
     local targetuser="${1}"
     shift
 
-    # This is used on SPACE_REDIR.
-    # shellcheck disable=2034
-    local sshpubkeyfile="${1}"
+    _OS_CREATE_USER "${targetuser}"
+}
+
+# Helper function to OS_CREATE_USER
+_OS_CREATE_USER()
+{
+    SPACE_SIGNATURE="targetuser"
+    SPACE_DEP="PRINT FILE_CHMOD FILE_MKDIRP FILE_ROW_PERSIST FILE_CHOWNR OS_ID OS_ADD_USER OS_USER_EXIST"
+
+    local targetuser="${1}"
     shift
 
     PRINT "Create ${targetuser}." "debug"
@@ -712,6 +719,9 @@ OS_CREATE_USER()
     local out_osinit=''
     OS_ID
 
+    # Read pub key from stdin
+    local keycontents="$(cat)"
+
     local home="${out_oshome}/${targetuser}"
     if ! OS_USER_EXIST "${targetuser}"; then
         OS_ADD_USER "${targetuser}" "${home}"
@@ -719,9 +729,9 @@ OS_CREATE_USER()
     FILE_CHMOD "700" "${home}" &&
     FILE_MKDIRP "${home}/.ssh" &&
     FILE_CHMOD "700" "${home}/.ssh" &&
-    FILE_PIPE_APPEND "${home}/.ssh/authorized_keys" &&
+    FILE_ROW_PERSIST "${keycontents}" "${home}/.ssh/authorized_keys" &&
     FILE_CHMOD "600" "${home}/.ssh/authorized_keys" &&
-    FILE_CHOWNR "${targetuser}:${targetuser}" "${home}"
+    FILE_CHOWNR "${targetuser}:${targetuser}" "${home}/.ssh"
 
     if [ "$?" -gt 0 ]; then
         PRINT "Could not create user: ${targetuser}." "error"
@@ -861,7 +871,7 @@ OS_MKSUDO_USER()
     local targetuser="${1}"
     shift
 
-    PRINT "mksudo ${targetuser}." "info"
+    PRINT "mksudo ${targetuser}." "debug"
 
     OS_GROUP_EXIST "sudo"
     if [ "$?" -eq 0 ]; then
@@ -960,7 +970,7 @@ OS_DISABLE_ROOT()
 {
     SPACE_DEP="PRINT FILE_SED FILE_ROW_PERSIST OS_SERVICE"
 
-    PRINT "Inactivating root account." "info"
+    PRINT "Inactivating root account." "debug"
 
     #if [ "$(id -u)" -eq 0 ]; then
         #PRINT "Do not run this as root." "error"
