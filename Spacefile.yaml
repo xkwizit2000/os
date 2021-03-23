@@ -15,9 +15,9 @@
 #
 ---
 _clone:
-    @clone: file string
-    @include: file|/_clone/
-    @include: string|/_clone/
+    @clone: file:1.6.0 string:1.4.0
+    @include: file:1.6.0|/_clone/
+    @include: string:1.4.0|/_clone/
 @include: |/_clone/
 
 _dep_install:
