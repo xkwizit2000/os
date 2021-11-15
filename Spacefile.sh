@@ -42,8 +42,8 @@ OS_ID()
 {
     SPACE_DEP="OS_COMMAND"
 
-    out_ostype="gnu"
-    out_oshome="/home"
+    out_ostype="$(uname -o)"
+    out_oshome="$(dirname ~/)"
     out_oscwd="$(pwd)"
     out_ospkgmgr=
     out_osinit="sysvinit"
